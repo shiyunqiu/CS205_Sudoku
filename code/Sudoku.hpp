@@ -20,7 +20,7 @@ public:
     Sudoku(const std::string& filename, int& grid_size);
     void load(const std::string& filename);
 protected:
-    int safe(int row, int col, int n);
+    int safe(int row, int col, int n) const;
     int grid_size;
     std::vector<std::vector<int> > board;
 };

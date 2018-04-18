@@ -64,7 +64,7 @@ void Sudoku::load(const std::string& filename)
     }
 }
 
-int Sudoku::safe(int row, int col, int n)
+int Sudoku::safe(int row, int col, int n) const
 {
     int r, c, br, bc;
     int small_grid = sqrt(grid_size);

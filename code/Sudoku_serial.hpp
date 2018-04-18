@@ -18,7 +18,7 @@ public:
     SudokuSerial() : Sudoku() {}
     SudokuSerial(const std::vector<std::vector<int> >& board, int& grid_size) : Sudoku(board, grid_size) {}
     SudokuSerial(const std::string& filename, int& grid_size) : Sudoku(filename, grid_size) {}
-    void solve(int row, int col);
+    virtual void solve(int row=0, int col=0);
     void print();
 //    friend class SudokuParallel;
 };
