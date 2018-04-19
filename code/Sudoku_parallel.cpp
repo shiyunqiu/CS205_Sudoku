@@ -64,7 +64,7 @@ void SudokuParallel::solve(int row, int col)
     // Solve starting from each of these boards in parallel
     int size = starts.size();
     std::cout << "queue size = " << size << std::endl;
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(dynamic) private(i) shared(starts)
     for (int i=0; i<size; ++i){
         // starts[i].print();
         starts[i].solve();
