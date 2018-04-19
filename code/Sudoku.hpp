@@ -18,8 +18,9 @@ public:
     Sudoku();
     Sudoku(const std::vector<std::vector<int> >& board_pass, int& grid_size);
     Sudoku(const std::string& filename, int& grid_size);
+    Sudoku(const Sudoku& s); // deepcopy
     void load(const std::string& filename);
-protected:
+// protected:
     int safe(int row, int col, int n) const;
     int grid_size;
     std::vector<std::vector<int> > board;

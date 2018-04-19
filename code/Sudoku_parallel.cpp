@@ -8,11 +8,13 @@
 
 #include <iostream>
 #include "Sudoku_parallel.hpp"
+#include "Sudoku_serial.hpp"
 #include <vector>
 
 
 void SudokuParallel::generate()
-{
+{   
+    // std::cout << "generating" << std::endl;
     int size = starts.size();
     for (int n=0; n<size; ++n) {
         const SudokuSerial& s = starts.front();
@@ -21,19 +23,21 @@ void SudokuParallel::generate()
             for (int j=0; j<grid_size; j++){
                 if (s.board[i][j]==0){
                     for (int val=1; val<=grid_size; val++){
-                        int seen = s.safe(i, j, val);
-                        if (seen==0){
-                            starts.push_back(s);
+                        if (s.safe(i, j, val)){
+                            // std::cout << "valid fill-in: " << i << j << val << std::endl;
+                            starts.push_back(SudokuSerial(s)); // a deep copy
                             starts.back().board[i][j]=val;
                             gen++;
                         }
                     }
-                    if (gen>0) break;
                 }
+                if (gen>0) break;
             }
+            if (gen>0) break;
         }
         if (gen!=0) starts.pop_front();
     }
+    // std::cout << "generated" << std::endl;
 }
 
 /** Analyze the board to determine the amount of bootstrapping to do. */
@@ -47,20 +51,22 @@ void SudokuParallel::analyze()
         }
     }
     // How to do this interpolation?
-    ngen = 4+(4.-13.)/(53.-64.)*(nz-53);
+    // ngen = 4+(4.-13.)/(53.-64.)*(nz-53);
+    ngen = 4;
 }
 
 
 void SudokuParallel::solve(int row, int col)
 {
-    // Generate starting boards via breadth-first search
-    starts.emplace_back(board);
+    starts.emplace_back(SudokuSerial(*this)); // a deep copy
     for (int i=0; i<ngen; ++i) generate();
     
     // Solve starting from each of these boards in parallel
     int size = starts.size();
-    #pragma omp parallel for reduction(+:total)
+    std::cout << "queue size = " << size << std::endl;
+    #pragma omp parallel for
     for (int i=0; i<size; ++i){
+        // starts[i].print();
         starts[i].solve();
     }
 }

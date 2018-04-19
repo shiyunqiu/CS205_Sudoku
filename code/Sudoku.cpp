@@ -27,9 +27,21 @@ Sudoku::Sudoku(const std::string& filename, int& grid_size):
 grid_size(grid_size)
 {
     board.resize(grid_size);
-    for(int i = 0; i < grid_size; i++)
+    for (int i = 0; i < grid_size; i++)
         board[i].resize(grid_size);
     load(filename);
+}
+
+Sudoku::Sudoku(const Sudoku& s):
+grid_size(s.grid_size)
+{
+    board.resize(grid_size);
+    for (int i = 0; i < grid_size; i++) {
+        board[i].resize(grid_size);
+        for (int j = 0; j < grid_size; j++) {
+            board[i][j] = s.board[i][j];
+        }
+    }
 }
 
 /** Load a Sudoku board from a file.
