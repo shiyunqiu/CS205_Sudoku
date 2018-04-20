@@ -64,7 +64,6 @@ void SudokuParallel::solve(bool warm_start)
     if (!warm_start) {
         starts.emplace_back(SudokuSerial(*this)); // a deep copy
     }
-
     for (int i=0; i<ngen; ++i) generate();
     
     // Solve starting from each of these boards in parallel
@@ -74,7 +73,7 @@ void SudokuParallel::solve(bool warm_start)
     for (int i=0; i < size; ++i) {
         starts.front().solve();
         SudokuSerial& ss = starts.front(); 
-        for (int i = 0; i < ss.solutions.size(); i++) {
+        while (ss.solutions.size() > 0) {
             solutions.push_back(ss.solutions.front());
             ss.solutions.pop_front();
         }
