@@ -69,7 +69,7 @@ void SudokuMPI::solve(bool warm_start)
 
         int mpi_n = starts.size();
         int mpi_nper = mpi_n / mpi_size;
-        std::cout << "RANK-" << mpi_rank << " generated the MPI-level queue sized: " << mpi_n << std::endl;
+        std::cout << "RANK-" << mpi_rank << " generated the MPI-level queue sized " << mpi_n << std::endl;
 
         for (int r = 1; r < mpi_size; r++) {
 
@@ -87,7 +87,7 @@ void SudokuMPI::solve(bool warm_start)
             delete [] chunkarray;
         }
         mpi_nloc = starts.size();
-        std::cout << "RANK-" << mpi_rank << " is left with a chunck of: " << mpi_nloc << std::endl;
+        std::cout << "RANK-" << mpi_rank << " is left with a chunck of " << mpi_nloc << std::endl;
 
     }
     else {
@@ -113,20 +113,55 @@ void SudokuMPI::solve(bool warm_start)
 
     SudokuParallel::solve(true); // warm_start=true -> the board will not emplace itself back into the queue
 
+
     /* MPI-level result collection */
 
-    int finish = 1;
+    int nsol = solutions.size();
+    int* solarray = new int[Ncell];
+    std::cout << "RANK-" << mpi_rank << " ended up with " << nsol << " solution(s)" << std::endl;
+
     if (mpi_rank != 0) {
-        MPI_Send(&finish, 1, MPI_INT, 0, 50, MPI_COMM_WORLD);
+
+        MPI_Send(&nsol, 1, MPI_INT, 0, 50, MPI_COMM_WORLD);
+
+        for (int i = 0; i < nsol; i++) {
+            solutions.front().to_array(solarray);
+            MPI_Send(solarray, Ncell, MPI_INT, 0, 50, MPI_COMM_WORLD);
+            solutions.pop_front();
+        }
+
     }
     else {
+
+        int nsol_others;
+
         for (int r = 1; r < mpi_size; r++) {
-            MPI_Recv(&finish, 1, MPI_INT, r, 50, MPI_COMM_WORLD, &mpi_state);
+
+            MPI_Recv(&nsol_others, 1, MPI_INT, r, 50, MPI_COMM_WORLD, &mpi_state);
+            nsol += nsol_others;
+
+            for (int i = 0; i < nsol_others; i++) {
+                MPI_Recv(solarray, Ncell, MPI_INT, 0, 50, MPI_COMM_WORLD, &mpi_state);
+                solutions.push_back(Sudoku(solarray, grid_size));
+            }
+
         }
-        double t_end = MPI_Wtime();
-        std::cout << "RANK-" << mpi_rank << " collected the results, elapsed in " << t_end - t_begin << " seconds" << std::endl;
+
+        double t_end = MPI_Wtime(); 
+        std::cout << "RANK-" << mpi_rank << " has collected the results" << std::endl;
+
+        for (int i = 0; i < nsol; i++) {
+            std::cout << std::endl << "SOLUTION " << i+1 << std::endl << std::endl;
+            solutions.front().output(std::cout);
+            solutions.pop_front();
+        }
+        std::cout << "RANK-" << mpi_rank << " elapsed in " << t_end - t_begin << " seconds" << std::endl;
+
     }
 
+    delete [] solarray;
+
+    
     /* MPI finalization */
 
     MPI_Finalize();

@@ -71,8 +71,14 @@ void SudokuParallel::solve(bool warm_start)
     int size = starts.size();
     std::cout << "omp queue size: " << size << std::endl;
     #pragma omp parallel for schedule(dynamic)
-    for (int i=0; i<size; ++i) {
-        starts[i].solve();
+    for (int i=0; i < size; ++i) {
+        starts.front().solve();
+        SudokuSerial& ss = starts.front(); 
+        for (int i = 0; i < ss.solutions.size(); i++) {
+            solutions.push_back(ss.solutions.front());
+            ss.solutions.pop_front();
+        }
+        starts.pop_front();
     }
 }
 

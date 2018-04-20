@@ -11,7 +11,7 @@
 #include "Sudoku_serial.hpp"
 #include "Sudoku_parallel.hpp"
 #include "Sudoku_mpi.hpp"
-#include <omp.h>
+// #include <omp.h>
 
 
 int main(int argc, char * argv[]) {

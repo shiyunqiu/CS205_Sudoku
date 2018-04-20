@@ -26,6 +26,7 @@ public:
     void generate();
     /** Sequence of boards used to bootstrap parallelization. */
     std::deque<SudokuSerial> starts;
+    std::deque<Sudoku> solutions;
     /** Number of generations of bootstrapping to perform.
      * \note Optimal value determined experimentally. */
     static int SPNGEN; // default number for ngen (making tests easier)

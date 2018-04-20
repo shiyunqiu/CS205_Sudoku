@@ -10,6 +10,7 @@
 
 #include <string>
 #include <vector>
+#include <iostream>
 
 /**
  @class Sudoku
@@ -26,6 +27,7 @@ public:
     Sudoku(const int* array, int& grid_size); // construct from an int array
     void to_array(int* array); // export to an int array
     void load(const std::string& filename);
+    void output(std::ostream& out=std::cout);
     int safe(int row, int col, int n) const;
     int grid_size;
     std::vector<std::vector<int> > board;

@@ -9,6 +9,7 @@
 #ifndef SUDOKU_SERIAL_HPP
 #define SUDOKU_SERIAL_HPP
 
+#include <deque>
 #include "Sudoku.hpp"
 
 
@@ -22,7 +23,7 @@ public:
     SudokuSerial(const int* array, int& grid_size) : Sudoku(array, grid_size) {};
     void solve(int row=0, int col=0);
     void print();
-    // friend class SudokuParallel;
+    std::deque<Sudoku> solutions;
 };
 
 #endif

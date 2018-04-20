@@ -114,6 +114,23 @@ void Sudoku::load(const std::string& filename)
     }
 }
 
+
+void Sudoku::output(std::ostream& out) {
+
+    int r, c;
+    int small_grid = sqrt(grid_size);
+
+    for (r = 0; r < grid_size; r++) {
+        for (c = 0; c < grid_size; c++) {
+            out << board[r][c] << " ";
+            if (c % small_grid == (small_grid-1)) out << "  ";
+        }
+        out << std::endl;
+        if (r % small_grid == (small_grid-1)) out << std::endl;
+    }
+
+}
+
 /** check if a value can be put at a certain position on the board
  @param col [column number]
  @param row [row number]

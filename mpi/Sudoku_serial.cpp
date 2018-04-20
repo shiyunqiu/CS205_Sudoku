@@ -9,13 +9,17 @@
 #include <iostream>
 #include <cmath>
 #include "Sudoku_serial.hpp"
+#include "Sudoku.hpp"
 
 
 void SudokuSerial::solve(int row, int col){
     int n, t;
-    if (row == grid_size)
+    if (row == grid_size) {
+        std::cout << std::endl;
         print();
-    else{
+        solutions.push_back(Sudoku(*this));
+    }
+    else {
         for (n = 1; n <= grid_size; n++){
             if (safe(row, col, n)) {
                 t = board[row][col];
@@ -36,7 +40,7 @@ void SudokuSerial::print()
     static int nsol = 0;
     int r, c;
     int small_grid = sqrt(grid_size);
-    std::cout << "solution " << ++nsol <<std::endl;
+    std::cout << "SOLUTION " << ++nsol << std::endl << std::endl;
     for (r = 0; r < grid_size; r++)
     {
         for (c = 0; c < grid_size; c++)
