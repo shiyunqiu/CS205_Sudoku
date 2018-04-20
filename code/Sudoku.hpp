@@ -1,10 +1,9 @@
-//
-//  Header.h
-//  Sudoku
-//
-//  Created by Shiyun Qiu on 4/8/18.
-//  Copyright © 2018 Shiyun Qiu. All rights reserved.
-//
+/**
+ @file Sudoku.hpp
+ @brief Header file for base class
+ @author Shiyun Qiu, Yiqi Xie, Yuyue Wang, Xiangru Shu
+ @date April 19, 2018
+ */
 
 #ifndef SUDOKU_HPP
 #define SUDOKU_HPP
@@ -12,7 +11,12 @@
 #include <string>
 #include <vector>
 
-/** A Sudoku solver. */
+/**
+ @class Sudoku
+ @brief Base class
+ 
+ This class is a base class for the inherited classes Sudoku_serial and Sudoku_parallel. It has three constructors, one copy constructor, two public functions and two member variables.
+*/
 class Sudoku {
 public:
     Sudoku();
@@ -20,10 +24,8 @@ public:
     Sudoku(const std::string& filename, int& grid_size);
     Sudoku(const Sudoku& s); // deepcopy
     void load(const std::string& filename);
-// protected:
     int safe(int row, int col, int n) const;
     int grid_size;
     std::vector<std::vector<int> > board;
 };
-
 #endif

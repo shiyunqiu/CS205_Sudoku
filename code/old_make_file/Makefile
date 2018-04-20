@@ -1,5 +1,5 @@
 # Include the configuration file
-include config.mk
+include config.mk.linux
 
 cflags+=-std=c++11
 
