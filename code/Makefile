@@ -3,7 +3,7 @@ cxx=g++-7
 cflags+=-std=c++11
 
 execs=sudoku_run
-objs=sudoku.cpp sudoku_serial.cpp sudoku_parallel.cpp
+objs=Sudoku.cpp Sudoku_serial.cpp Sudoku_parallel.cpp
 src=$(patsubst %.o,%.cpp,$(objs))
 
 all: $(execs)
