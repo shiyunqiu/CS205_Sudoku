@@ -9,6 +9,7 @@
 
 #include <string>
 #include <iostream>
+#include <deque>
 
 class Board {
 /* 
@@ -16,7 +17,7 @@ class Board {
 
     Main features:
      - 2d array access:         board[i][j], board.cell(i,j)
-     - load from file:          board.load(filename)
+     - input from std::istream: board.input(std::cin)
      - output to std::ostream:  board.output(std::cout)
      - proposal check:          board.safe(i, j, n)
      
@@ -25,9 +26,8 @@ public:
     Board();
     Board(int bsize);
     Board(int bsize, const int* barray);
-    Board(int bsize, const std::string& filename);
     Board(const Board& b);
-    void load(const std::string& filename);
+    void input(std::istream& in=std::cin);
     void output(std::ostream& out=std::cout) const;
     int get_size() const;
     int get_ncell() const;

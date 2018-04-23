@@ -1,27 +1,27 @@
-#include "board.h"
-#include "board_container.h"
-#include "solver.h"
+#include "board.hpp"
+#include "board_deque.hpp"
+#include "solver.hpp"
 
 
-void Solver::solve(Board& b, BoardContainer& sols, int row, int col) {
+void Solver::solve(Board& b, int r, int c) {
 
-    int abs_index = row * b.get_size() + col;
-
+    int abs_index = r * b.get_size() + c;
     if (abs_index >= b.get_ncell()) {
-        sols.push(b);
+        push_back(b); 
     }
     else {
         int t;
-        int row_next = (abs_index + 1) / b.get_size();
-        int col_next = (abs_index + 1) % b.get_size();
+        int r_next = (abs_index + 1) / b.get_size();
+        int c_next = (abs_index + 1) % b.get_size();
 
         for (int n = 1; n <= b.get_size(); n++) {
-            if (b.safe(row, col, n)) {
-                t = b[row][col];
-                b[row][col] = n;
-                solve(b, sols, row_next, col_next);
-                b[row][col] = t;
+            if (b.safe(r, c, n)) {
+                t = b[r][c];
+                b[r][c] = n;
+                solve(b, r_next, c_next);
+                b[r][c] = t;
             }
         }
     }
 }
+

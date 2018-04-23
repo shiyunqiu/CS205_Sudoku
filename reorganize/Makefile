@@ -1,17 +1,19 @@
 cxx=g++-7
 # cxx=g++-7 -fopenmp
+# cxx=mpic++
 # cxx=mpic++ -openmp
 cflags+=-std=c++11
 
 execs=run
+
 objs=\
 	board.cpp \
-	board_container.h \
-	board_queue.cpp \
+	board_deque.cpp \
 	solver.cpp \
 	bootstrapper.cpp \
-	board_stack.cpp
-src=$(patsubst %.o,%.cpp,$(objs))
+	# sudoku_mpi.cpp \
+
+src=$(patsubst %.cpp,$(objs))
 
 all: $(execs)
 
