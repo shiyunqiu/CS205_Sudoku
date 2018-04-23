@@ -1,0 +1,19 @@
+ON 16_2
+
+serial solve:           46.4154 s
+serial queue theme:     46.7896 s
+parallel queue theme:   23.4849 s       2 t, 8 solver
+mpi:                    35.3221 s       2 p, 8 boot, 16 solver
+
+
+
+ON 25_5min
+
+serial solve:           137.774 s
+parallel queue theme:   71.8661 s       2 t, 32 solver
+mpi:                    88.4901 s       2 p, 16 boot, 32 solver
+
+
+ON 25_15min
+
+parallel queue theme:   209.283 s       4 t, 128 solver
