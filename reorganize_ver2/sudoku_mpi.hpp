@@ -1,7 +1,8 @@
 /**
  @file sudoku_mpi.hpp
- @author Yiqi Xie
- @date April 21, 2018
+ @brief Header file for the MPI version of the Sudoku solver.
+ @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
+ @date April 19, 2018
  */
 
 #ifndef SUDOKU_MPI_H
@@ -16,10 +17,19 @@
 #include "bootstrapper.hpp"
 #include "sudoku.hpp"
 
-
+/**
+ @class SudokuMPI
+ @brief Derived class of Sudoku, solve the Sudoku puzzle in parallel with MPI.
+ 
+ This is an inherited class of the Sudoku class. It has one constructor, one destructor, seven public methods, two public variables, four protected methods and eight protected variables.
+ */
 class SudokuMPI: public Sudoku {
 
 public:
+    /** Constructor of classSudokuMPI: initialize MPI and set up MPI communicators, print out the number of processes
+     @param argc [argument count]
+     @param argv [argument vector]
+     */
     SudokuMPI(int argc, char** argv) {
         MPI_Init(&argc, &argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
@@ -28,6 +38,8 @@ public:
             std::cout << "Sudoku MPI started with " << mpi_size << " processes" << std::endl << std::endl;
         }
     }
+    
+    /* Destructor of classSudokuMPI: clean up the MPI process. */
     ~SudokuMPI() {
         MPI_Finalize();
         if (mpi_rank == 0) {

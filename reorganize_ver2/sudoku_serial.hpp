@@ -1,7 +1,8 @@
 /**
- @file sudoku.hpp
- @author Yiqi Xie
- @date April 23, 2018
+ @file sudoku_serial.hpp
+ @brief Header file for the serial class
+ @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
+ @date April 19, 2018
  */
 
 
@@ -12,7 +13,12 @@
 #include "board_deque.hpp"
 #include "sudoku.hpp"
 
-
+/**
+ @class SudokuSerial
+ @brief Derived class of Sudoku, serial version of the Sudoku Solver
+ 
+ This is an inherited class of the Sudoku class. It has two constructors, five public functions, and three protected variables.
+ */
 class SudokuSerial: public Sudoku {
 public:
     SudokuSerial(): board(Board(BSIZE)) {}

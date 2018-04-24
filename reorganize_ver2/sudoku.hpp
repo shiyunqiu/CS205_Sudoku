@@ -1,7 +1,8 @@
 /**
  @file sudoku.hpp
- @author Yiqi Xie
- @date April 23, 2018
+ @brief Header file for base class
+ @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
+ @date April 19, 2018
  */
 
 #ifndef SUDOKU_H
@@ -12,7 +13,12 @@
 #include "board.hpp"
 #include "board_deque.hpp"
 
-
+/**
+ @class Sudoku
+ @brief Base class
+ 
+ This class is a base class for the inherited classes Sudoku_serial, Sudoku_parallel, SudokuQueueScheme, and SudokuMPI. It has three public functions, three public parameters, and seven protected methods. The seven protected methods are left empty in the base class and will be implemented in the inherited classes as needed.
+ */
 class Sudoku {
 public:
     void run() {

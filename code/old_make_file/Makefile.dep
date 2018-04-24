@@ -1,3 +1,0 @@
-sudoku.o: sudoku.cpp sudoku.hpp
-sudoku_serial.o: sudoku_serial.cpp sudoku_serial.hpp sudoku.hpp
-sudoku_parallel.o: sudoku_parallel.cpp sudoku_parallel.hpp sudoku.hpp sudoku_serial.hpp

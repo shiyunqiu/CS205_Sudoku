@@ -1,3 +1,11 @@
+/**
+ @file sudoku_queue_scheme.cpp
+ @brief Implementation for queue construction
+ @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
+ @date April 19, 2018
+ 
+ Construct a queue of boards to be used in the OpenMP version and MPI version of the solver.
+ */
 #include <iostream>
 #include <vector>
 #include <ctime>
@@ -9,11 +17,12 @@
 #include "sudoku.hpp"
 #include "sudoku_queue_scheme.hpp"
 
-
+// number of threads
 int SudokuQueueScheme::THREAD_NUM = 2;
+// number of bootstrapping
 int SudokuQueueScheme::BOOTSTRAP_NUM = 8;
 
-
+/* Constructor of class SudokuQueueScheme: set the number of threads for the OpenMP version. */
 SudokuQueueScheme::SudokuQueueScheme() {
 
     omp_set_dynamic(0);
@@ -24,6 +33,7 @@ SudokuQueueScheme::SudokuQueueScheme() {
     std::cout << n_thread << std::endl;
 }
 
+/* Read the content of a puzzle file, push the problem to a deque, and output the board. */
 void SudokuQueueScheme::task_begin() { 
 
     Board board(BSIZE); 
@@ -34,9 +44,11 @@ void SudokuQueueScheme::task_begin() {
     board.output(std::cout);
 }
 
+/* Bootstrapping: generate N (determined by BOOTSTRAP_NUM and the bootstrap function) potential boards and push them into a deque to be solved in parallel. */
 void SudokuQueueScheme::task_assign() {
 
     int minlen = BOOTSTRAP_NUM;
+    // if given a negative number, ensure some level of bootstrapping
     if (minlen < 0) {
         minlen = 2 * n_thread * n_thread;
     }
@@ -45,6 +57,7 @@ void SudokuQueueScheme::task_assign() {
             problems.size() < minlen) {
         problems.bootstrap();
     }
+    // push into a deque
     problems.solutions().dump(solutions);
 
     int N = problems.size();
@@ -53,6 +66,7 @@ void SudokuQueueScheme::task_assign() {
     std::cout << "Queue Length: " << N << std::endl;
 }
 
+/* Solve the problem in parallel using OpenMP. */
 void SudokuQueueScheme::task_process() {
 
     int N = problems.size();
@@ -64,6 +78,7 @@ void SudokuQueueScheme::task_process() {
     }
 }
 
+/* Collect the solutions found by all threads. */
 void SudokuQueueScheme::task_collect() {
 
     int N = problems.size();
@@ -72,6 +87,7 @@ void SudokuQueueScheme::task_collect() {
     }
 }
 
+/* Write the solutions into a file, and print out the solution boards. */
 void SudokuQueueScheme::task_end() {
 
     write(solutions); 
@@ -79,11 +95,13 @@ void SudokuQueueScheme::task_end() {
     solutions.output(std::cout);
 }
 
+/* Start of the OpenMP timer. */
 void SudokuQueueScheme::timer_start() {
 
     t_start = omp_get_wtime();
 }
 
+/* End of the OpenMP timer and show elapsed time of execution. */
 void SudokuQueueScheme::timer_stop() {
 
     t_stop = omp_get_wtime();

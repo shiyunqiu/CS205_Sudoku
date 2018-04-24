@@ -1,9 +1,17 @@
+/**
+ @file bootstrapper.cpp
+ @brief implementation of a bootstrapper
+ @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
+ @date April 19, 2018
+ 
+ Propagate possible boards of solutions and divide one Sudoku problem into several simpler subproblems.
+ */
 #include <deque>
 #include "board.hpp"
 #include "board_deque.hpp"
 #include "bootstrapper.hpp"
 
-
+/* Propagate possible boards of solutions and divide one Sudoku problem into several simpler subproblems. */
 void Bootstrapper::bootstrap() {
 
     // if there is no start, return
