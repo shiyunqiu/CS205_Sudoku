@@ -1,5 +1,3 @@
-#include <iostream>
-#include <vector>
 /**
  @file main.cpp
  @brief Giant Sudoku Solver
@@ -8,6 +6,8 @@
  
  This is a solver for Sudoku problems of any size. Serial, OpenMP, and MPI+OpenMP versions are available. A brutal force solver is implemented in the serial version. For the parallel version, we generate n potential boards by bootstrapping and push all the boards into a dequeue. OpenMP enables all threads to solve the Sudoku puzzle simultaneously while MPI makes sure that all nodes are solveing the problem in parallel.
  */
+#include <iostream>
+#include <vector>
 #include "board.hpp"
 #include "board_deque.hpp"
 #include "solver.hpp"
