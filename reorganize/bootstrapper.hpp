@@ -25,7 +25,6 @@ public:
     }
 protected:
     std::deque<int> qsafe;
-    BoardDeque qtmp;
     BoardDeque qsol;
 };
 

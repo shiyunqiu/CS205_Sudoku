@@ -6,44 +6,53 @@
 
 void Bootstrapper::bootstrap() {
 
-    if (size() <= 0) return;
+    // if there is no start, return
+    if (size() <= 0) {
+        return;
+    }
 
-    bool solved = true; 
-    bool progressed = false;
+    Board& fboard = front();
 
-    int size = front().get_size();
-
-    for (int row = 0; row < size; row++) {
-        for (int col = 0; col < size; col++) {
-            Board& tboard = front();
-
-            if (tboard[row][col] == 0) {
-                solved = false; 
-                passFB(qtmp);
-
-                for (int n = 1; n <= size; n++) {
-                    if (tboard.safe(row, col, n)) {
-                        qsafe.push_back(n);
-                    }
-                }
-                while (qsafe.size() > 0) {
-                    tboard[row][col] = qsafe.front();
-                    qsafe.pop_front();
-                    if (qsafe.size() <= 0)
-                        qtmp.passBB(*this);
-                    else
-                        push_back(tboard);
-                    progressed = true;
-                }
-                while (qtmp.size() > 0) {
-                    qtmp.pop_front();
-                }
-            }
-            if (progressed) break;
+    // if there is no empty cell, we get a solution
+    int iempty = -1;
+    int bsize = fboard.get_size();
+    for (int i = 0; i < bsize*bsize; i++) {
+        if (fboard.as_array()[i] == 0) {
+            iempty = i;
+            break;
         }
-        if (progressed) break;
     }
-    if (solved) {
+    if (iempty < 0) {
         passFB(qsol);
+        return;
     }
+
+    // if the empty cell is not safe for all, we get a dead-end
+    int rempty = iempty / bsize;
+    int cempty = iempty % bsize;
+    for (int n = 1; n <= bsize; n++) {
+        if (fboard.safe(rempty, cempty, n)) {
+            qsafe.push_back(n);
+        }
+    }
+    if (qsafe.size() <= 0) {
+        pop_front();
+        return;
+    }
+
+    // generate subproblems and add them to the back
+    while (qsafe.size() > 0) {
+        fboard[rempty][cempty] = qsafe.front();
+        if (qsafe.size() > 1) {
+            push_back(fboard);
+        } else {
+            passFB(*this);
+        }
+        qsafe.pop_front();
+    }
+    return;
 }
+
+
+
+
