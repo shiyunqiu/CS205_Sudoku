@@ -1,6 +1,6 @@
-# cxx=g++ -fopenmp
+cxx=g++ -fopenmp
 # cxx=g++-7
-cxx=g++-7 -fopenmp
+# cxx=g++-7 -fopenmp
 # cxx=mpic++
 # cxx=mpic++ -openmp
 cflags+=-std=c++11
