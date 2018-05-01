@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <deque>
+#include <chrono>
 #include "board.hpp"
 
 /*
@@ -68,6 +69,8 @@ public:
      @param len [number of boards to be moved]
      */
     virtual void dump(BoardDeque& bq, int len=-1) { while (len-- != 0 && size() > 0) passFB(bq); } 
+    /* randomly shuffle the deque */
+    virtual void shuffle(unsigned seed=std::chrono::system_clock::now().time_since_epoch().count());
 public:
 // protected:
     std::deque<Board*> bdeque;

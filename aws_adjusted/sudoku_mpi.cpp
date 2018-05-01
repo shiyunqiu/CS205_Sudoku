@@ -17,6 +17,9 @@
 #include "sudoku.hpp"
 #include "sudoku_mpi.hpp"
 
+
+// seed for the shuffling the first bootstrapping result
+unsigned SudokuMPI::SEED = std::chrono::system_clock::now().time_since_epoch().count();
 // number of bootstrapping needed to assign jobs to each node
 int SudokuMPI::BOOTSTRAP_NUM_1 = 8;
 // number of bootstrapping needed to assign jobs to each thread
@@ -101,9 +104,11 @@ void SudokuMPI::task_process() {
             probs.bootstrap();
         }
         probs.solutions().dump(sols);
+        probs.shuffle(SEED);
 
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << "task queue of " << probs.size() << " boards bootstrapped" << std::endl;
+        
         // separate into mpi_size chunks, nper per chunk except for the last chunk
         int n = probs.size();
         int nper = n / mpi_size;
@@ -112,6 +117,7 @@ void SudokuMPI::task_process() {
             n -= nper;
         }
         schedule.push_back(n); // the largest chunk is at the back of it
+        
         // assign the boards to each node
         int nloc;
         for (int r = 1; r < mpi_size; r++) {

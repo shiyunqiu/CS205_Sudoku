@@ -16,7 +16,7 @@ objs=\
 	sudoku.cpp \
 	sudoku_serial.cpp \
 	sudoku_mpi.cpp \
-	sudoku_queue_scheme.cpp \
+	# sudoku_queue_scheme.cpp \
 
 src=$(patsubst %.cpp,$(objs))
 

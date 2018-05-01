@@ -55,6 +55,7 @@ public:
     virtual void timer_stop();
 
 public:
+    static unsigned SEED;
     static int BOOTSTRAP_NUM_1;
     static int BOOTSTRAP_NUM_2;
 
