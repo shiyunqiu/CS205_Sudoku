@@ -69,7 +69,7 @@ protected:
     int mpi_size;
     MPI_Status mpi_state;
 
-    Bootstrapper probs; 
+    // Bootstrapper probs; 
     BoardDeque sols;
     std::deque<int> schedule;
 

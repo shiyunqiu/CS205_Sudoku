@@ -70,7 +70,7 @@ void SudokuQueueScheme::task_assign() {
 void SudokuQueueScheme::task_process() {
 
     omp_set_dynamic(0);
-    // omp_set_num_threads(THREAD_NUM);
+    omp_set_num_threads(THREAD_NUM);
     n_thread = omp_get_num_threads();
 
     std::cout << "OMP Number of Threads: ";
@@ -110,9 +110,9 @@ void SudokuQueueScheme::task_process() {
         solvers[i].dump(solutions);
     }
 
-    // write(solutions); 
-    // std::cout << "Solution Board(s): " << std::endl;
-    // solutions.output(std::cout);
+    write(solutions); 
+    std::cout << "Solution Board(s): " << std::endl;
+    solutions.output(std::cout);
 }
 
 /* Collect the solutions found by all threads. */
@@ -127,9 +127,9 @@ void SudokuQueueScheme::task_collect() {
 /* Write the solutions into a file, and print out the solution boards. */
 void SudokuQueueScheme::task_end() {
 
-    write(solutions); 
-    std::cout << "Solution Board(s): " << std::endl;
-    solutions.output(std::cout);
+    // write(solutions); 
+    // std::cout << "Solution Board(s): " << std::endl;
+    // solutions.output(std::cout);
 }
 
 /* Start of the OpenMP timer. */

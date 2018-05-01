@@ -25,6 +25,64 @@ int SudokuMPI::BOOTSTRAP_NUM_2 = 16;
 /* Read the content of a puzzle file, push the problem to a deque, and output the board. */
 void SudokuMPI::task_begin() {
 
+    // if (mpi_rank == 0) {
+
+    //     Board board(BSIZE);
+    //     read(board); 
+    //     probs.push_back(board);
+
+    //     std::cout << "Problem Board" << std::endl;
+    //     board.output(std::cout);
+    // }
+}
+
+
+/* Bootstrapping: generate n (determined by BOOTSTRAP_NUM_1 and the bootstrap function) potential boards and push them into a deque to be solved in parallel. Divide the problem into several chunks according to the number of nodes available, separate the deque and assign smaller deques to each node. */
+void SudokuMPI::task_assign() {
+
+    // if (mpi_rank == 0) {
+    //     // bootstrapping
+    //     while (probs.size() > 0 && 
+    //             probs.size() < BOOTSTRAP_NUM_1) {
+    //         probs.bootstrap();
+    //     }
+    //     probs.solutions().dump(sols);
+
+    //     std::cout << "RANK-" << mpi_rank << ": "; 
+    //     std::cout << "task queue of " << probs.size() << " boards bootstrapped" << std::endl;
+    //     // separate into mpi_size chunks, nper per chunk except for the last chunk
+    //     int n = probs.size();
+    //     int nper = n / mpi_size;
+    //     while (n >= 2 * nper) {
+    //         schedule.push_back(nper); 
+    //         n -= nper;
+    //     }
+    //     schedule.push_back(n); // the largest chunk is at the back of it
+    //     // assign the boards to each node
+    //     int nloc;
+    //     for (int r = 1; r < mpi_size; r++) {
+    //         nloc = schedule.back();
+    //         SMPI_DumpDeque(probs, r, nloc);
+    //         schedule.pop_back();
+    //     }
+
+    //     std::cout << "RANK-" << mpi_rank << ": "; 
+    //     std::cout << probs.size() << " boards kept" << std::endl;
+    // }
+    // else {
+
+    //     SMPI_LoadDeque(probs, 0);
+
+    //     std::cout << "RANK-" << mpi_rank << ": "; 
+    //     std::cout << probs.size() << " boards assigned" << std::endl;
+    // }
+}
+
+/* Solve the problem in parallel using MPI combined with OpenMP. */
+void SudokuMPI::task_process() {
+
+    Bootstrapper probs;
+
     if (mpi_rank == 0) {
 
         Board board(BSIZE);
@@ -34,11 +92,7 @@ void SudokuMPI::task_begin() {
         std::cout << "Problem Board" << std::endl;
         board.output(std::cout);
     }
-}
-
-
-/* Bootstrapping: generate n (determined by BOOTSTRAP_NUM_1 and the bootstrap function) potential boards and push them into a deque to be solved in parallel. Divide the problem into several chunks according to the number of nodes available, separate the deque and assign smaller deques to each node. */
-void SudokuMPI::task_assign() {
+    
 
     if (mpi_rank == 0) {
         // bootstrapping
@@ -76,10 +130,7 @@ void SudokuMPI::task_assign() {
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << probs.size() << " boards assigned" << std::endl;
     }
-}
 
-/* Solve the problem in parallel using MPI combined with OpenMP. */
-void SudokuMPI::task_process() {
     // boostrapping to make sure that each thread in each node get assigned a job
     while (probs.size() > 0 && 
             probs.size() < BOOTSTRAP_NUM_2) {

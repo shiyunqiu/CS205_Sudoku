@@ -15,7 +15,7 @@
 #include "sudoku.hpp"
 #include "sudoku_serial.hpp"
 #include "sudoku_queue_scheme.hpp"
-// #include "sudoku_mpi.hpp"
+#include "sudoku_mpi.hpp"
 
 
 void demo(); // read this for quick start
@@ -29,13 +29,13 @@ int main(int argc, char** argv) {
 
     // SudokuSerial sudoku(argc, argv); 
 
-    SudokuQueueScheme::THREAD_NUM = 4;
-    SudokuQueueScheme::BOOTSTRAP_NUM = 128;
-    SudokuQueueScheme sudoku(argc, argv);
+    // SudokuQueueScheme::THREAD_NUM = 4;
+    // SudokuQueueScheme::BOOTSTRAP_NUM = 128;
+    // SudokuQueueScheme sudoku(argc, argv);
 
-    // SudokuMPI::BOOTSTRAP_NUM_1 = 16;
-    // SudokuMPI::BOOTSTRAP_NUM_2 = 32;
-    // SudokuMPI sudoku(argc, argv);
+    SudokuMPI::BOOTSTRAP_NUM_1 = 16;
+    SudokuMPI::BOOTSTRAP_NUM_2 = 32;
+    SudokuMPI sudoku(argc, argv);
 
     sudoku.run();
 
