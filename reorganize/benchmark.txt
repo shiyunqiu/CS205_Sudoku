@@ -1,6 +1,0 @@
-ON sdk16_2
-
-serial solve:           46.4154 s
-serial queue theme:     46.7896 s
-parallel queue theme:   23.4849 s
-mpi:                    35.3221 s

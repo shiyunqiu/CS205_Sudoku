@@ -8,7 +8,6 @@
  */
 #include <iostream>
 #include <vector>
-#include <ctime>
 #include <omp.h>
 #include "board.hpp"
 #include "board_deque.hpp"
@@ -22,66 +21,18 @@ int SudokuQueueScheme::THREAD_NUM = 2;
 // number of bootstrapping
 int SudokuQueueScheme::BOOTSTRAP_NUM = 8;
 
-/* Constructor of class SudokuQueueScheme: set the number of threads for the OpenMP version. */
-SudokuQueueScheme::SudokuQueueScheme() {
-
-    // omp_set_dynamic(0);
-    // omp_set_num_threads(THREAD_NUM);
-    // n_thread = omp_get_num_threads();
-
-    // std::cout << "OMP Number of Threads: ";
-    // std::cout << n_thread << std::endl;
-}
-
 /* Read the content of a puzzle file, push the problem to a deque, and output the board. */
 void SudokuQueueScheme::task_begin() { 
 
-    // Board board(BSIZE); 
-    // read(board); 
-    // problems.push_back(board);
-
-    // std::cout << "Problem Board: " << std::endl;
-    // board.output(std::cout);
-}
-
-/* Bootstrapping: generate N (determined by BOOTSTRAP_NUM and the bootstrap function) potential boards and push them into a deque to be solved in parallel. */
-void SudokuQueueScheme::task_assign() {
-
-    // int minlen = BOOTSTRAP_NUM;
-    // // if given a negative number, ensure some level of bootstrapping
-    // if (minlen < 0) {
-    //     minlen = 2 * n_thread * n_thread;
-    // }
-
-    // while (problems.size() > 0 && 
-    //         problems.size() < minlen) {
-    //     problems.bootstrap();
-    // }
-    // // push into a deque
-    // problems.solutions().dump(solutions);
-
-    // int N = problems.size();
-    // solvers.resize(N);
-
-    // std::cout << "Queue Length: " << N << std::endl;
+    read(board);
+    std::cout << "Problem Board: " << std::endl;
+    board.output(std::cout);
 }
 
 /* Solve the problem in parallel using OpenMP. */
 void SudokuQueueScheme::task_process() {
 
-    omp_set_dynamic(0);
-    omp_set_num_threads(THREAD_NUM);
-    n_thread = omp_get_num_threads();
-
-    std::cout << "OMP Number of Threads: ";
-    std::cout << n_thread << std::endl;
-
-    Board board(BSIZE); 
-    read(board); 
     Bootstrapper problems(board);
-
-    std::cout << "Problem Board: " << std::endl;
-    board.output(std::cout);
 
     int minlen = BOOTSTRAP_NUM;
     // if given a negative number, ensure some level of bootstrapping
@@ -109,27 +60,14 @@ void SudokuQueueScheme::task_process() {
     for (int i = 0; i < N; i++) {
         solvers[i].dump(solutions);
     }
-
-    write(solutions); 
-    std::cout << "Solution Board(s): " << std::endl;
-    solutions.output(std::cout);
-}
-
-/* Collect the solutions found by all threads. */
-void SudokuQueueScheme::task_collect() {
-
-    // int N = problems.size();
-    // for (int i = 0; i < N; i++) {
-    //     solvers[i].dump(solutions);
-    // }
 }
 
 /* Write the solutions into a file, and print out the solution boards. */
 void SudokuQueueScheme::task_end() {
 
-    // write(solutions); 
-    // std::cout << "Solution Board(s): " << std::endl;
-    // solutions.output(std::cout);
+    write(solutions);
+    std::cout << "Solution Board(s): " << std::endl;
+    solutions.output(std::cout);
 }
 
 /* Start of the OpenMP timer. */

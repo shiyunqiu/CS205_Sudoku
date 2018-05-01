@@ -13,8 +13,6 @@
 #include <mpi.h>
 #include "board.hpp"
 #include "board_deque.hpp"
-#include "solver.hpp"
-#include "bootstrapper.hpp"
 #include "sudoku.hpp"
 
 /**
@@ -30,7 +28,7 @@ public:
      @param argc [argument count]
      @param argv [argument vector]
      */
-    SudokuMPI(int argc, char** argv) {
+    SudokuMPI(int argc, char** argv): board(BSIZE) {
         MPI_Init(&argc, &argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
@@ -47,14 +45,13 @@ public:
         }
     }
     virtual void task_begin();
-    virtual void task_assign();
-    virtual void task_process();
-    virtual void task_collect();
     virtual void task_end();
     virtual void timer_start();
     virtual void timer_stop();
 
 public:
+    static bool SHUFFLE;
+    static unsigned SHUFFLE_SEED;
     static int BOOTSTRAP_NUM_1;
     static int BOOTSTRAP_NUM_2;
 
@@ -69,9 +66,8 @@ protected:
     int mpi_size;
     MPI_Status mpi_state;
 
-    Bootstrapper probs; 
+    Board board; 
     BoardDeque sols;
-    std::deque<int> schedule;
 
     double t_start;
     double t_stop;

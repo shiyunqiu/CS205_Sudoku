@@ -2,8 +2,8 @@
 # cxx=g++ -fopenmp
 # cxx=g++-7
 # cxx=g++-7 -fopenmp
-# cxx=mpic++
-cxx=mpic++ -fopenmp
+cxx=mpic++
+# cxx=mpic++ -fopenmp
 cflags+=-std=c++11
 
 execs=run
@@ -14,9 +14,11 @@ objs=\
 	solver.cpp \
 	bootstrapper.cpp \
 	sudoku.cpp \
-	sudoku_serial.cpp \
 	sudoku_mpi.cpp \
-	sudoku_queue_scheme.cpp \
+	sudoku_mpi_static.cpp \
+	# sudoku_mpi_dynamic.cpp \
+	# sudoku_serial.cpp \
+	# sudoku_queue_scheme.cpp \
 
 src=$(patsubst %.cpp,$(objs))
 

@@ -7,6 +7,9 @@
  Define a queue of boards to help the implementation of the OpenMP version and MPI version of the solver.
  */
 #include <deque>
+#include <vector>
+#include <algorithm>
+#include <random>
 #include "board.hpp"
 #include "board_deque.hpp"
 
@@ -120,5 +123,19 @@ void BoardDeque::output(std::ostream& out) {
     }
     while (collect.size() > 0) {
         collect.passFB(*this);
+    }
+}
+
+
+void BoardDeque::shuffle(unsigned seed) {
+    int n = bdeque.size();
+    std::vector<Board*> tmpvec(n);
+    for (int i = 0; i < n; ++i) {
+        tmpvec[i] = bdeque.front();
+        bdeque.pop_front();
+    }
+    std::shuffle(tmpvec.begin(), tmpvec.end(), std::default_random_engine(seed));
+    for (std::vector<Board*>::iterator it = tmpvec.begin(); it != tmpvec.end(); ++it) {
+        bdeque.push_back(*it);
     }
 }

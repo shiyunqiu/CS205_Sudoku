@@ -24,9 +24,7 @@ public:
     void run() {
         task_begin();
         timer_start();
-        task_assign();
         task_process();
-        task_collect();
         timer_stop();
         task_end();
     }
@@ -40,9 +38,7 @@ public:
 
 protected:
     virtual void task_begin() {}
-    virtual void task_assign() {}
     virtual void task_process() {}
-    virtual void task_collect() {}
     virtual void task_end() {}
     virtual void timer_start() {}
     virtual void timer_stop() {}

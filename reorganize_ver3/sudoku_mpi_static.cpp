@@ -1,50 +1,35 @@
+/**
+ @file sudoku_mpi.cpp
+ @brief Implementation for the MPI version of the Sudoku Solver
+ @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
+ @date May 1, 2018
+ 
+ Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI.
+ */
 #include <iostream>
-#include <deque>
 #include <vector>
+#include <deque>
 #include <mpi.h>
 #include "board.hpp"
 #include "board_deque.hpp"
 #include "solver.hpp"
 #include "bootstrapper.hpp"
+#include "sudoku.hpp"
 #include "sudoku_mpi.hpp"
+#include "sudoku_mpi_static.hpp"
 
+/* Solve the problem in parallel using MPI combined with OpenMP. */
+void SudokuMPIStatic::task_process() {
 
-int SudokuMPI::BOOTSTRAP_N1 = 8;
-int SudokuMPI::BOOTSTRAP_N2 = 16;
+    Bootstrapper probs;
 
-
-void SudokuMPI::task_begin(const std::string& filename) {
-
+    /* task assignment */
     if (mpi_rank == 0) {
 
-        Board board(bsize);
-
-        std::ifstream file(filename);
-        if (!file.is_open()) {
-            std::cerr << "Error opening file " << filename << std::endl;
-            exit(1);
-        } else {
-            b.input(file);
-        }
-        file.close();
-
+        // bootstrapping
         probs.push_back(board);
-
-        std::cout << "Problem Board" << std::endl;
-        board.output();
-    }
-}
-
-
-
-void SudokuMPI::task_assign() {
-
-    if (mpi_rank == 0) {
-
-        t_start = MPI_Wtime();
-
         while (probs.size() > 0 && 
-                probs.size() < BOOTSTRAP_N1) {
+                probs.size() < BOOTSTRAP_NUM_1) {
             probs.bootstrap();
         }
         probs.solutions().dump(sols);
@@ -52,6 +37,14 @@ void SudokuMPI::task_assign() {
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << "task queue of " << probs.size() << " boards bootstrapped" << std::endl;
 
+        if (SHUFFLE) {
+            probs.shuffle(SHUFFLE_SEED);
+            std::cout << "RANK-" << mpi_rank << ": "; 
+            std::cout << "task queue shuffled" << std::endl;
+        }
+        
+        // separate into mpi_size chunks, nper per chunk except for the last chunk
+        std::deque<int> schedule;
         int n = probs.size();
         int nper = n / mpi_size;
         while (n >= 2 * nper) {
@@ -59,7 +52,8 @@ void SudokuMPI::task_assign() {
             n -= nper;
         }
         schedule.push_back(n); // the largest chunk is at the back of it
-
+        
+        // assign the boards to each node
         int nloc;
         for (int r = 1; r < mpi_size; r++) {
             nloc = schedule.back();
@@ -77,13 +71,12 @@ void SudokuMPI::task_assign() {
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << probs.size() << " boards assigned" << std::endl;
     }
-}
 
+    /* parallel processing */
 
-void SudokuMPI::task_process() {
-
+    // boostrapping to make sure that each thread in each node get assigned a job
     while (probs.size() > 0 && 
-            probs.size() < BOOTSTRAP_N2) {
+            probs.size() < BOOTSTRAP_NUM_2) {
         probs.bootstrap();
     }
     probs.solutions().dump(sols);
@@ -107,11 +100,8 @@ void SudokuMPI::task_process() {
 
     std::cout << "RANK-" << mpi_rank << ": "; 
     std::cout << sols.size() << " solutions found" << std::endl;
-}
 
-
-
-void SudokuMPI::task_collect() {
+    /* result collection */
 
     if (mpi_rank != 0){
         SMPI_DumpDeque(sols, 0, -1);
@@ -120,71 +110,8 @@ void SudokuMPI::task_collect() {
         for (int r = 1; r < mpi_size; r++){
             SMPI_LoadDeque(sols, r);
         }
-        t_end = MPI_Wtime();
 
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << "results collected" << std::endl;
-
-        std::cout << "RANK-" << mpi_rank << ": "; 
-        std::cout << "Elapsed in " << t_end - t_start << " seconds (MPI)" << std::endl << std::endl;
     }
 }
-
-
-void SudokuMPI::task_end(std::ostream& out) {
-
-    if (mpi_rank == 0) {
-
-        std::cout << "Solution Board(s)" << std::endl;
-        sols.output(out);     
-    }
-}
-
-
-void SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len) {
-
-    if (len < 0) {
-        len = bdeque.size();
-    }
-
-    MPI_Send(&len, 1, MPI_INT, 
-             r, 50, MPI_COMM_WORLD);
-
-    for (int i = 0; i < len; i++) {
-        Board& b = bdeque.front();
-        SMPI_SendBoard(b, r);
-        bdeque.pop_front();
-    }
-}
-
-
-void SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r) {
-
-    int len;
-    MPI_Recv(&len, 1, MPI_INT, 
-             r, 50, MPI_COMM_WORLD, &mpi_state);
-
-    for (int i = 0; i < len; i++) {
-        Board b(bsize);
-        SMPI_RecvBoard(b, r);
-        bdeque.push_back(b);
-    }
-}
-
-
-void SudokuMPI::SMPI_SendBoard(Board& b, int r) {
-
-    MPI_Send(b.as_array(), 
-             bsize * bsize, MPI_INT, 
-             r, 50, MPI_COMM_WORLD);
-}
-
-
-void SudokuMPI::SMPI_RecvBoard(Board& b, int r) {
-
-    MPI_Recv(b.as_array(), 
-             bsize * bsize, MPI_INT, 
-             r, 50, MPI_COMM_WORLD, &mpi_state);
-}
-
-
