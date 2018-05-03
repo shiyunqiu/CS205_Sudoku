@@ -16,7 +16,7 @@ objs=\
 	sudoku.cpp \
 	sudoku_mpi.cpp \
 	sudoku_mpi_static.cpp \
-	# sudoku_mpi_dynamic.cpp \
+	sudoku_mpi_dynamic.cpp \
 	# sudoku_serial.cpp \
 	# sudoku_queue_scheme.cpp \
 

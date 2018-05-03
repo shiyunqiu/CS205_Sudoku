@@ -38,7 +38,7 @@ public:
     }
     
     /* Destructor of classSudokuMPI: clean up the MPI process. */
-    ~SudokuMPI() {
+    virtual ~SudokuMPI() {
         MPI_Finalize();
         if (mpi_rank == 0) {
             std::cout << "Sudoku MPI terminated" << std::endl;
@@ -56,21 +56,23 @@ public:
     static int BOOTSTRAP_NUM_2;
 
 protected:
-    void SMPI_DumpDeque(BoardDeque& bdeque, int r, int len=-1);
-    void SMPI_LoadDeque(BoardDeque& bdeque, int r);
-    void SMPI_SendBoard(Board& b, int r);
-    void SMPI_RecvBoard(Board& b, int r);
+    void SMPI_DumpDeque(BoardDeque& bdeque, int r, int len=-1, int tag=SMPI_TAGPLAIN);
+    void SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag=SMPI_TAGPLAIN);
+    void SMPI_SendBoard(Board& b, int r, int tag=SMPI_TAGPLAIN);
+    void SMPI_RecvBoard(Board& b, int r, int tag=SMPI_TAGPLAIN);
 
 protected:
     int mpi_rank;
     int mpi_size;
-    MPI_Status mpi_state;
+    MPI_Status mpi_status;
 
     Board board; 
     BoardDeque sols;
 
     double t_start;
     double t_stop;
+
+    static const int SMPI_TAGPLAIN = 0;
 };
 
 #endif

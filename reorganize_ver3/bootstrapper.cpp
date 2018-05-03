@@ -6,9 +6,6 @@
  
  Propagate possible boards of solutions and divide one Sudoku problem into several simpler subproblems.
  */
-#include <deque>
-#include "board.hpp"
-#include "board_deque.hpp"
 #include "bootstrapper.hpp"
 
 /* Propagate possible boards of solutions and divide one Sudoku problem into several simpler subproblems. */

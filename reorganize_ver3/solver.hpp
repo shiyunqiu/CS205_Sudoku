@@ -8,8 +8,6 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include <iostream>
-#include "board.hpp"
 #include "board_deque.hpp"
 
 /**

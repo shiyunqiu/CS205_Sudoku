@@ -37,8 +37,8 @@ public:
     static std::string OFILE_NAME;
 
 protected:
+    virtual void task_process() {};
     virtual void task_begin() {}
-    virtual void task_process() {}
     virtual void task_end() {}
     virtual void timer_start() {}
     virtual void timer_stop() {}

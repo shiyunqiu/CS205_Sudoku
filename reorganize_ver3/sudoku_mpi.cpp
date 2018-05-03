@@ -65,18 +65,18 @@ void SudokuMPI::timer_stop() {
  @param r [destination]
  @param len [number of boards to be sent to a node]
  */
-void SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len) {
+void SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len, int tag) {
 
     if (len < 0) {
         len = bdeque.size();
     }
 
     MPI_Send(&len, 1, MPI_INT, 
-             r, 50, MPI_COMM_WORLD);
+             r, tag, MPI_COMM_WORLD);
 
     for (int i = 0; i < len; i++) {
         Board& b = bdeque.front();
-        SMPI_SendBoard(b, r);
+        SMPI_SendBoard(b, r, tag);
         bdeque.pop_front();
     }
 }
@@ -85,15 +85,15 @@ void SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len) {
  @param bdeque [a deque of board]
  @param r [source]
  */
-void SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r) {
+void SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag) {
     //number of boards
     int len;
     MPI_Recv(&len, 1, MPI_INT, 
-             r, 50, MPI_COMM_WORLD, &mpi_state);
+             r, tag, MPI_COMM_WORLD, &mpi_status);
 
     for (int i = 0; i < len; i++) {
         Board b(BSIZE);
-        SMPI_RecvBoard(b, r);
+        SMPI_RecvBoard(b, r, tag);
         bdeque.push_back(b);
     }
 }
@@ -102,22 +102,22 @@ void SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r) {
  @param b [board]
  @param r [destination]
  */
-void SudokuMPI::SMPI_SendBoard(Board& b, int r) {
+void SudokuMPI::SMPI_SendBoard(Board& b, int r, int tag) {
 
     MPI_Send(b.as_array(), 
              BSIZE * BSIZE, MPI_INT, 
-             r, 50, MPI_COMM_WORLD);
+             r, tag, MPI_COMM_WORLD);
 }
 
 /** Receive a board
  @param b [board]
  @param r [source]
  */
-void SudokuMPI::SMPI_RecvBoard(Board& b, int r) {
+void SudokuMPI::SMPI_RecvBoard(Board& b, int r, int tag) {
 
     MPI_Recv(b.as_array(), 
              BSIZE * BSIZE, MPI_INT, 
-             r, 50, MPI_COMM_WORLD, &mpi_state);
+             r, tag, MPI_COMM_WORLD, &mpi_status);
 }
 
 

@@ -13,7 +13,6 @@
 #include "board_deque.hpp"
 #include "solver.hpp"
 #include "bootstrapper.hpp"
-#include "sudoku.hpp"
 #include "sudoku_queue_scheme.hpp"
 
 // number of threads

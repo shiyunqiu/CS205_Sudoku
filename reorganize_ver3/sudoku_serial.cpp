@@ -12,7 +12,6 @@
 #include "board.hpp"
 #include "board_deque.hpp"
 #include "solver.hpp"
-#include "sudoku.hpp"
 #include "sudoku_serial.hpp"
 
 /* Read the content of a puzzle file, and output the board. */

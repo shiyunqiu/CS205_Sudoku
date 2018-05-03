@@ -9,7 +9,6 @@
 #define BOOTSTRAPPER_H
 
 #include <deque>
-#include "board.hpp"
 #include "board_deque.hpp"
 
 /**

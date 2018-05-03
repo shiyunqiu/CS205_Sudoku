@@ -6,16 +6,13 @@
  
  Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI.
  */
-#include <iostream>
+// #include <iostream>
 #include <vector>
 #include <deque>
-#include <mpi.h>
 #include "board.hpp"
 #include "board_deque.hpp"
 #include "solver.hpp"
 #include "bootstrapper.hpp"
-#include "sudoku.hpp"
-#include "sudoku_mpi.hpp"
 #include "sudoku_mpi_static.hpp"
 
 /* Solve the problem in parallel using MPI combined with OpenMP. */
@@ -65,7 +62,7 @@ void SudokuMPIStatic::task_process() {
         std::cout << probs.size() << " boards kept" << std::endl;
     }
     else {
-
+        
         SMPI_LoadDeque(probs, 0);
 
         std::cout << "RANK-" << mpi_rank << ": "; 
@@ -86,7 +83,7 @@ void SudokuMPIStatic::task_process() {
     
     int N = probs.size();
     std::vector<Solver> solvers(N);
-
+    
     #pragma omp parallel for \
             schedule(dynamic) \
             shared(N, probs, solvers)
@@ -103,15 +100,17 @@ void SudokuMPIStatic::task_process() {
 
     /* result collection */
 
-    if (mpi_rank != 0){
-        SMPI_DumpDeque(sols, 0, -1);
-    }
-    else {
+    if (mpi_rank == 0){
+
         for (int r = 1; r < mpi_size; r++){
             SMPI_LoadDeque(sols, r);
         }
 
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << "results collected" << std::endl;
+    }
+    else {
+
+        SMPI_DumpDeque(sols, 0, -1);
     }
 }

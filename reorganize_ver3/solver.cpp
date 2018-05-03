@@ -6,8 +6,6 @@
  
  Brutal force solver using depth first search and recursion.
  */
-#include "board.hpp"
-#include "board_deque.hpp"
 #include "solver.hpp"
 
 /** Solve the Sudoku puzzle by recursion

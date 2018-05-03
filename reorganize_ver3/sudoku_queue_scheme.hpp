@@ -11,7 +11,6 @@
 #include <omp.h>
 #include "board.hpp"
 #include "board_deque.hpp"
-#include "bootstrapper.hpp"
 #include "sudoku.hpp"
 
 /**

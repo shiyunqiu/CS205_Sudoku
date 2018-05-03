@@ -6,8 +6,6 @@
  */
 #include <iostream>
 #include <fstream>
-#include "board.hpp"
-#include "board_deque.hpp"
 #include "sudoku.hpp"
 
 // grid size (row length) of the Sudoku puzzle

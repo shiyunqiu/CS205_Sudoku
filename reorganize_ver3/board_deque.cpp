@@ -6,11 +6,9 @@
  
  Define a queue of boards to help the implementation of the OpenMP version and MPI version of the solver.
  */
-#include <deque>
 #include <vector>
-#include <algorithm>
 #include <random>
-#include "board.hpp"
+#include <algorithm>
 #include "board_deque.hpp"
 
 /** Constructor of class BoardDeque: construct a new BoardDeque by saving the board b as its firast element

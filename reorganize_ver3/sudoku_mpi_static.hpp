@@ -13,10 +13,6 @@
 class SudokuMPIStatic: public SudokuMPI {
 
 public:
-    /** Constructor of classSudokuMPI: initialize MPI and set up MPI communicators, print out the number of processes
-     @param argc [argument count]
-     @param argv [argument vector]
-     */
     SudokuMPIStatic(int argc, char** argv): SudokuMPI(argc, argv) {}
     virtual void task_process();
 };
