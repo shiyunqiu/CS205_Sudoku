@@ -44,7 +44,6 @@ protected:
 protected:
     static const int SMPI_TAGOVER = 1;
     static const int SMPI_TAGVAC = 2;
-    static const int SMPI_TAGRES = 3;
 };
 
 #endif
