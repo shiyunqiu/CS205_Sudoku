@@ -55,33 +55,21 @@ void SudokuMPIDynamic::task_process() {
             std::cout << "task queue assigning" << "...";
             std::cout << N-probs.size()+1 << "/" << N << std::flush;
 
-            // connect to all slaves
             for (int r = 1; r < mpi_size; r++) {
+                vacancies[r-1] = 0;
                 MPI_Irecv(NULL, 0, MPI_INT, 
                           r, SMPI_TAGVAC, 
                           MPI_COMM_WORLD, 
                           mpi_reqvac_master+r-1);
-            }
-
-            // wait until at least one slave reports vacancy
-            int rvac;
-            MPI_Waitany(mpi_size-1, 
-                        mpi_reqvac_master, 
-                        &rvac, &mpi_status);
-
-            // record all slave states at the time
-            for (int r = 1; r < mpi_size; r++) {
-                vacancies[r-1] = 0;
                 MPI_Test(mpi_reqvac_master+r-1,
                          &vacancies[r-1],
                          &mpi_status);
-            }
-
-            // reponse
-            for (int r = 1; r < mpi_size; r++) {
                 if (!vacancies[r-1]) {
                     MPI_Cancel(mpi_reqvac_master+r-1);
                 } else if (probs.size() > 0) {
+                    std::cout << "\rRANK-" << mpi_rank << ": "; 
+                    std::cout << "task queue assigning" << "...";
+                    std::cout << N-probs.size()+1 << "/" << N << std::flush;
                     SMPI_DumpDeque(probs, r, 1);
                 } else {
                     SMPI_DumpDeque(probs, r, 0);
