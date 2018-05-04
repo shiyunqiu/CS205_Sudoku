@@ -9,11 +9,11 @@ Sudoku is a combinatorial number placement puzzle. The objective of this game is
 
 # How-to-use
 
-## Download source code
+## Download Source Code
 
 To run our sudoku solver, first download our [source code](https://github.com/shiyunqiu/CS205_Sudoku).
 
-## Set up
+## Set Up
 
 As our program requires OpenMP and MPI, we recommend using AWS to run our code. To set up OpenMP and MPI on AWS, we followed the guides provided by CS205: [OpenMP](https://canvas.harvard.edu/courses/37285/files/5490479?module_item_id=363501) and [MPI](https://canvas.harvard.edu/courses/37285/files/5490480?module_item_id=363500).
 
@@ -39,6 +39,8 @@ sudo apt-get install g++
 sudo apt-get install build-essential
 ```
 
+## Run
+
 Then you should be able to run the program by use the following commands:
 
 ```
@@ -60,3 +62,16 @@ For example, to use 4 nodes, the command is:
  mpirun -np 4 -hosts master,node1,node2,node3,node4 ./run
 ```
 
+## Test Cases
+
+All the [test cases](https://github.com/shiyunqiu/CS205_Sudoku/tree/master/test_cases) are under the `test_cases` directory in our Github Repository. 
+
+`test16_1min.sdk`: a 16 * 16 sudoku problem, took 1 min to solve in serial version
+`test16_5min.sdk`: a 16 * 16 sudoku problem, took 5 min to solve in serial version 
+`test16_15min.sdk`: a 25 * 25 sudoku problem, took 15 min to solve in serial version
+`test25_5min.sdk`: a 25 * 25 sudoku problem, took 5 min to solve in serial version 
+`test25_15min.sdk`: a 25 * 25 sudoku problem, took 15 min to solve in serial version 
+`test25_28min.sdk`: a 25 * 25 sudoku problem, took 28 min to solve in serial version
+`test36.sdk`: a 36 * 36 sudoku problem
+`test100.sdk`: a 100 * 100 sudoku problem
+`test144.sdk`: a 144 * 144 sudoku problem
