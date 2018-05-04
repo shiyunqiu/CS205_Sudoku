@@ -47,7 +47,7 @@ make
 ```
 
 ```
-run
+./run
 ```
 
 To run MPI version, after command `make`, copy file `run` to directory `cloud`, then go to `cloud` and use the following command to run:
