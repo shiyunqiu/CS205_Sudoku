@@ -5,7 +5,7 @@ Group 1: Shiyun Qiu, Xiangru Shu, Yiqi Xie, Yuyue Wang
 
 # Introduction
 
-
+Sudoku is a combinatorial number placement puzzle. The objective of this game is to fill a 9×9 grid (board) with digits so that each column, each row, and each of the nine 3×3 subgrids (boxes) contains all of the digits from 1 to 9. Higher-rank sudokus usually have <a href="https://www.codecogs.com/eqnedit.php?latex=n^2*n^2" target="_blank"><img src="https://latex.codecogs.com/gif.latex?n^2*n^2" title="n^2*n^2" /></a> board with <a href="https://www.codecogs.com/eqnedit.php?latex=n*n" target="_blank"><img src="https://latex.codecogs.com/gif.latex?n*n" title="n*n" /></a> boxes (n>3). However, higher-rank sudokus take hours to run in serial. Thus, we aim to parallelize a sudoku solver algorithm with several parallelization techniques (OpenMP and MPI), so that giant sudoku solver can be solved within a limited time.
 
 # How-to-use
 
