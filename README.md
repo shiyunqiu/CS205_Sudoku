@@ -39,8 +39,8 @@ sudo apt-get install build-essential
 ```
 
 ## Run
-
-Then you should be able to run the program by use the following commands:
+ 
+We prepared a `Makefile` to compile the code, then you should be able to run the program by use the following commands:
 
 ```
 make
