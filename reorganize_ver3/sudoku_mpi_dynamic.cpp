@@ -19,7 +19,6 @@
 /* Solve the problem in parallel using MPI combined with OpenMP. */
 void SudokuMPIDynamic::task_process() {
 
-    int tmp;
     Bootstrapper probs;
     std::stringstream message;
 
@@ -45,7 +44,7 @@ void SudokuMPIDynamic::task_process() {
     }
 
 
-    /* dynamic scheduled processing */
+    /* dynamicly scheduled processing */
     if (mpi_rank == 0) {
 
         int r = 1;
@@ -53,7 +52,7 @@ void SudokuMPIDynamic::task_process() {
 
         // set up receivers for vacancy notes
         for (r = 1; r < mpi_size; r++) {
-            MPI_Irecv(&tmp, 1, MPI_INT, 
+            MPI_Irecv(NULL, 0, MPI_INT, 
                       r, SMPI_TAGVAC, 
                       MPI_COMM_WORLD, 
                       &mpi_reqvac_master[r-1]);
@@ -71,8 +70,8 @@ void SudokuMPIDynamic::task_process() {
                 std::cout << "\rRANK-" << mpi_rank << ": "; 
                 std::cout << "task queue assigning" << "...";
                 std::cout << N-probs.size()+1 << "/" << N << std::flush;
-                SMPI_DumpDeque(probs, r, 1);
-                MPI_Irecv(&tmp, 1, MPI_INT, 
+                SMPI_DumpDeque(probs, r, 1); // this sends 1 board
+                MPI_Irecv(NULL, 0, MPI_INT, 
                           r, SMPI_TAGVAC, 
                           MPI_COMM_WORLD, 
                           &mpi_reqvac_master[r-1]);
@@ -81,21 +80,21 @@ void SudokuMPIDynamic::task_process() {
         }
         std::cout << ", exhausted" << std::endl;
 
-        // send out task-over message
-        for (r = 1; r < mpi_size; r++) {
-            MPI_Wait(&mpi_reqvac_master[r-1], 
-                     &mpi_status);
-            SMPI_DumpDeque(probs, r, 0); // this sends no boards
+        // send out task-over message (empty assignment)
+        for (int n_active = mpi_size-1; n_active > 0; n_active--) {
+            MPI_Waitany(mpi_size-1, 
+                        mpi_reqvac_master, 
+                        &r, &mpi_status);
+            SMPI_DumpDeque(probs, r+1, 0); // this sends NO board
         }
     }
     else {
 
         int count = 0;
-
         while (true) {
 
             // send out vacancy note
-            MPI_Isend(&tmp, 1, MPI_INT, 
+            MPI_Isend(NULL, 0, MPI_INT, 
                       0, SMPI_TAGVAC, 
                       MPI_COMM_WORLD, 
                       &mpi_reqvac_slave);
