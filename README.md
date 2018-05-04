@@ -1,9 +1,11 @@
-# CS205_Sudoku
+# Parallelized Giant Sudoku Solver
 Spring 2018 Harvard CS 205 Final Project
 
 Group 1: Shiyun Qiu, Xiangru Shu, Yiqi Xie, Yuyue Wang
 
 # Introduction
+
+
 
 # How-to-use
 
@@ -13,9 +15,9 @@ To run our sudoku solver, first download our [source code](https://github.com/sh
 
 ## Set up
 
-As our program requires OpenMP and MPI, we recommend using AWS to run our code. To set up AWS environment, we followed the guides provided by CS205: [OpenMP](https://canvas.harvard.edu/courses/37285/files/5490479?module_item_id=363501) and [MPI](https://canvas.harvard.edu/courses/37285/files/5490480?module_item_id=363500).
+As our program requires OpenMP and MPI, we recommend using AWS to run our code. To set up OpenMP and MPI on AWS, we followed the guides provided by CS205: [OpenMP](https://canvas.harvard.edu/courses/37285/files/5490479?module_item_id=363501) and [MPI](https://canvas.harvard.edu/courses/37285/files/5490480?module_item_id=363500).
 
-After connecting to the AWS instance, copy the source code from local to the AWS instance using the following command:
+After connecting to the AWS instance, copy the source code and test cases from local to the AWS instance using the following command:
 
 ```
 scp -i [key] [source code] [AWS Public IP]
@@ -47,11 +49,14 @@ make
 run
 ```
 
-## Serial
-To run serial version
+To run MPI version, after command `make`, copy file `run` to directory `cloud`, then go to `cloud` and use the following command to run:
 
+```
+ mpirun -np [number of nodes] -hosts master,node1... ./run
+```
 
-
-## OpenMP
-## OpenMP + MPI
+For example, to use 4 nodes, the command is:
+```
+ mpirun -np 4 -hosts master,node1,node2,node3,node4 ./run
+```
 
