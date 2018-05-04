@@ -1,7 +1,6 @@
 # Parallelized Giant Sudoku Solver
-Spring 2018 Harvard CS 205 Final Project
-
-Group 1: Shiyun Qiu, Xiangru Shu, Yiqi Xie, Yuyue Wang
+### CS 205 Final Project, Spring 2018 Harvard 
+### Group 1: Shiyun Qiu, Xiangru Shu, Yiqi Xie, Yuyue Wang
 
 # Introduction
 
