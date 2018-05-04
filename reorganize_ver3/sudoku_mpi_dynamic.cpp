@@ -47,8 +47,7 @@ void SudokuMPIDynamic::task_process() {
     /* dynamicly scheduled processing */
     if (mpi_rank == 0) {
 
-        int r = 1;
-        int N = probs.size();
+        int r;
 
         // set up receivers for vacancy notes
         for (r = 1; r < mpi_size; r++) {
@@ -61,6 +60,7 @@ void SudokuMPIDynamic::task_process() {
         // assign tasks
         r = 1;
         int is_vac;
+        int N = probs.size();
         while (probs.size() > 0) {
             is_vac = 0;
             MPI_Test(&mpi_reqvac_master[r-1],
