@@ -2,8 +2,8 @@
 # cxx=g++ -fopenmp
 # cxx=g++-7
 # cxx=g++-7 -fopenmp
-cxx=mpic++
-# cxx=mpic++ -fopenmp
+# cxx=mpic++
+cxx=mpic++ -fopenmp
 cflags+=-std=c++11
 
 execs=run

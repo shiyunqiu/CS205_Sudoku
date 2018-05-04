@@ -19,7 +19,7 @@ class SudokuMPIDynamic: public SudokuMPI {
 public:
     SudokuMPIDynamic(int argc, char** argv): SudokuMPI(argc, argv) {
         if (mpi_size < 2) {
-            std::cerr << "Error: need at least 2 processes to perform dynamic scheduling" << std::endl;
+            std::cerr << "Error: need at least 2 processors to perform dynamic scheduling" << std::endl;
             exit(1);
         }
         if (mpi_rank == 0) {
@@ -35,15 +35,16 @@ public:
 
 protected:
     void single_proc_solve(Bootstrapper& probs, BoardDeque& sols);
-    void SMPI_PostVacancy(int mpi_tag=SMPI_TAGVAC);
-    int SMPI_SeekVacancy(int mpi_tag=SMPI_TAGVAC);
 
 protected:
     MPI_Request mpi_reqover;
     MPI_Request mpi_reqvac_slave;
     MPI_Request* mpi_reqvac_master;
+
+protected:
     static const int SMPI_TAGOVER = 1;
     static const int SMPI_TAGVAC = 2;
+    static const int SMPI_TAGRES = 3;
 };
 
 #endif

@@ -7,6 +7,7 @@
  Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI.
  */
 #include <iostream>
+#include <chrono>
 #include <mpi.h>
 #include "board.hpp"
 #include "board_deque.hpp"
@@ -65,7 +66,7 @@ void SudokuMPI::timer_stop() {
  @param r [destination]
  @param len [number of boards to be sent to a node]
  */
-void SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len, int tag) {
+int SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len, int tag) {
 
     if (len < 0) {
         len = bdeque.size();
@@ -79,13 +80,15 @@ void SudokuMPI::SMPI_DumpDeque(BoardDeque& bdeque, int r, int len, int tag) {
         SMPI_SendBoard(b, r, tag);
         bdeque.pop_front();
     }
+
+    return len;
 }
 
 /** Receive boards from a node
  @param bdeque [a deque of board]
  @param r [source]
  */
-void SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag) {
+int SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag) {
     //number of boards
     int len;
     MPI_Recv(&len, 1, MPI_INT, 
@@ -96,6 +99,8 @@ void SudokuMPI::SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag) {
         SMPI_RecvBoard(b, r, tag);
         bdeque.push_back(b);
     }
+
+    return len;
 }
 
 /** Send a board

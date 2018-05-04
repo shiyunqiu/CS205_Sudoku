@@ -9,6 +9,7 @@
 #include <string>
 #include <cstring>
 #include <iostream>
+#include <iomanip>
 #include <fstream>
 #include <sstream>
 #include <cmath>
@@ -146,11 +147,12 @@ void Board::output(std::ostream& out) const {
 
     int r, c;
     int blocksize = sqrt(size);
+    int digit = int(log10(size)) + 1;
 
     out << std::endl;
     for (r = 0; r < size; r++) {
         for (c = 0; c < size; c++) {
-            out << array[r * size + c] << " ";
+            out << std::setw(digit) << array[r * size + c] << " ";
             if (c % blocksize == (blocksize-1)) out << "  ";
         }
         out << std::endl;

@@ -56,8 +56,8 @@ public:
     static int BOOTSTRAP_NUM_2;
 
 protected:
-    void SMPI_DumpDeque(BoardDeque& bdeque, int r, int len=-1, int tag=SMPI_TAGPLAIN);
-    void SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag=SMPI_TAGPLAIN);
+    int SMPI_DumpDeque(BoardDeque& bdeque, int r, int len=-1, int tag=SMPI_TAGPLAIN);
+    int SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag=SMPI_TAGPLAIN);
     void SMPI_SendBoard(Board& b, int r, int tag=SMPI_TAGPLAIN);
     void SMPI_RecvBoard(Board& b, int r, int tag=SMPI_TAGPLAIN);
 

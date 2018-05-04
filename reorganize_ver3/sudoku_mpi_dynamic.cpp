@@ -7,8 +7,8 @@
  Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI.
  */
 #include <iostream>
+#include <sstream>
 #include <vector>
-#include <deque>
 #include "board.hpp"
 #include "board_deque.hpp"
 #include "solver.hpp"
@@ -47,6 +47,7 @@ void SudokuMPIDynamic::task_process() {
     if (mpi_rank == 0) {
 
         int N = probs.size();
+        std::vector<int> vacancies(mpi_size-1);
 
         while (probs.size() > 0) {
 
@@ -54,12 +55,43 @@ void SudokuMPIDynamic::task_process() {
             std::cout << "task queue assigning" << "...";
             std::cout << N-probs.size()+1 << "/" << N << std::flush;
 
-            int rvac = SMPI_SeekVacancy();
-            SMPI_DumpDeque(probs, rvac, 1);
+            // connect to all slaves
+            for (int r = 1; r < mpi_size; r++) {
+                MPI_Irecv(NULL, 0, MPI_INT, 
+                          r, SMPI_TAGVAC, 
+                          MPI_COMM_WORLD, 
+                          mpi_reqvac_master+r-1);
+            }
+
+            // wait until at least one slave reports vacancy
+            int rvac;
+            MPI_Waitany(mpi_size-1, 
+                        mpi_reqvac_master, 
+                        &rvac, &mpi_status);
+
+            // record all slave states at the time
+            for (int r = 1; r < mpi_size; r++) {
+                vacancies[r-1] = 0;
+                MPI_Test(mpi_reqvac_master+r-1,
+                         &vacancies[r-1],
+                         &mpi_status);
+            }
+
+            // reponse
+            for (int r = 1; r < mpi_size; r++) {
+                if (!vacancies[r-1]) {
+                    MPI_Cancel(mpi_reqvac_master+r-1);
+                } else if (probs.size() > 0) {
+                    SMPI_DumpDeque(probs, r, 1);
+                } else {
+                    SMPI_DumpDeque(probs, r, 0);
+                }
+            }
         }
 
         std::cout << ", exhausted" << std::endl;
 
+        // tell all slaves that the task is over
         for (int r = 1; r < mpi_size; r++) {
             MPI_Isend(NULL, 0, MPI_INT, 
                       r, SMPI_TAGOVER, 
@@ -71,6 +103,7 @@ void SudokuMPIDynamic::task_process() {
     }
     else {
 
+        // connect to the master
         MPI_Irecv(NULL, 0, MPI_INT, 
                   0, SMPI_TAGOVER, 
                   MPI_COMM_WORLD, 
@@ -80,37 +113,46 @@ void SudokuMPIDynamic::task_process() {
 
         while (true) {
 
+            // check if the tsak is over
             int is_over = 0;
             MPI_Test(&mpi_reqover, 
                      &is_over, 
                      &mpi_status);
             if (is_over) {
-                std::cout << "RANK-" << mpi_rank << ": "; 
-                std::cout << sols.size() << " solutions found" << ", ";
-                std::cout << "in " << count << " attemps" << std::endl;
+                std::stringstream message;
+                message << "RANK-" << mpi_rank << ": ";
+                message << sols.size() << " solutions found" << ", ";
+                message << "in " << count << " assignments" << std::endl;
+                std::cout << message.str();
                 break;
             }
 
-            SMPI_PostVacancy();
-            SMPI_LoadDeque(probs, 0);
-            count++;
+            // report vacancy
+            MPI_Isend(NULL, 0, MPI_INT, 
+                      0, SMPI_TAGVAC, 
+                      MPI_COMM_WORLD, 
+                      &mpi_reqvac_slave);
+            MPI_Wait(&mpi_reqvac_slave, 
+                     &mpi_status);
 
-            single_proc_solve(probs, sols); // also clears up probs
+            // get assigned and process
+            int n_assign = SMPI_LoadDeque(probs, 0);
+            if (n_assign > 0) {
+                single_proc_solve(probs, sols); // also clears up probs
+                count += n_assign;
+            }
         }
     }
 
     /* result collection */
 
     if (mpi_rank != 0){
-
         SMPI_DumpDeque(sols, 0, -1);
     }
     else {
-
         for (int r = 1; r < mpi_size; r++){
             SMPI_LoadDeque(sols, r);
         }
-
         std::cout << "RANK-" << mpi_rank << ": "; 
         std::cout << "results collected" << std::endl;
     }
@@ -142,36 +184,6 @@ void SudokuMPIDynamic::single_proc_solve(Bootstrapper& probs, BoardDeque& sols) 
     for (int i = 0; i < N; i++) {
         solvers[i].dump(sols);
     }
-}
-
-
-void SudokuMPIDynamic::SMPI_PostVacancy(int mpi_tag) {
-
-    MPI_Isend(NULL, 0, MPI_INT, 
-              0, mpi_tag, 
-              MPI_COMM_WORLD, 
-              &mpi_reqvac_slave);
-
-    MPI_Wait(&mpi_reqvac_slave, 
-             &mpi_status);
-}
-
-
-int SudokuMPIDynamic::SMPI_SeekVacancy(int mpi_tag) {
-
-    for (int r = 1; r < mpi_size; r++) {
-        MPI_Irecv(NULL, 0, MPI_INT, 
-                  r, mpi_tag, 
-                  MPI_COMM_WORLD, 
-                  mpi_reqvac_master+r-1);
-    }
-
-    int rvac;
-    MPI_Waitany(mpi_size-1, 
-                mpi_reqvac_master, 
-                &rvac, &mpi_status);
-
-    return ++rvac;
 }
 
 

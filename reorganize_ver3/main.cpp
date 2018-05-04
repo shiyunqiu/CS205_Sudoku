@@ -19,7 +19,7 @@ int main(int argc, char** argv) {
     // Sudoku::IFILE_NAME = "./test9.sdk";
     // Sudoku::OFILE_NAME = "./solutions.txt";
     Sudoku::BSIZE = 16;
-    Sudoku::IFILE_NAME = "../test_cases/test16_1min.sdk";
+    Sudoku::IFILE_NAME = "../test_cases/test16_5min.sdk";
     Sudoku::OFILE_NAME = "./solutions.txt";
 
     // SudokuSerial sudoku(argc, argv); 
@@ -28,10 +28,10 @@ int main(int argc, char** argv) {
     // SudokuQueueScheme::BOOTSTRAP_NUM = 512;
     // SudokuQueueScheme sudoku(argc, argv);
 
-    SudokuMPI::SHUFFLE = true;
+    SudokuMPI::SHUFFLE = false;
     SudokuMPI::SHUFFLE_SEED = 9001;
-    SudokuMPI::BOOTSTRAP_NUM_1 = 128;
-    SudokuMPI::BOOTSTRAP_NUM_2 = 512;
+    SudokuMPI::BOOTSTRAP_NUM_1 = 512;
+    SudokuMPI::BOOTSTRAP_NUM_2 = 2048;
 
     // SudokuMPIStatic sudoku(argc, argv);
     SudokuMPIDynamic sudoku(argc, argv);
