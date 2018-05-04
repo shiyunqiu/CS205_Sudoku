@@ -67,11 +67,19 @@ For example, to use 4 nodes, the command is:
 All the [test cases](https://github.com/shiyunqiu/CS205_Sudoku/tree/master/test_cases) are under the `test_cases` directory in our Github Repository. 
 
 `test16_1min.sdk`: a 16 * 16 sudoku problem, took 1 min to solve in serial version
+
 `test16_5min.sdk`: a 16 * 16 sudoku problem, took 5 min to solve in serial version 
+
 `test16_15min.sdk`: a 25 * 25 sudoku problem, took 15 min to solve in serial version
+
 `test25_5min.sdk`: a 25 * 25 sudoku problem, took 5 min to solve in serial version 
+
 `test25_15min.sdk`: a 25 * 25 sudoku problem, took 15 min to solve in serial version 
+
 `test25_28min.sdk`: a 25 * 25 sudoku problem, took 28 min to solve in serial version
+
 `test36.sdk`: a 36 * 36 sudoku problem
+
 `test100.sdk`: a 100 * 100 sudoku problem
+
 `test144.sdk`: a 144 * 144 sudoku problem
