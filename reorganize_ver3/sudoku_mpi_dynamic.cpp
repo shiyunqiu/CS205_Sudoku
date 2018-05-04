@@ -19,7 +19,9 @@
 /* Solve the problem in parallel using MPI combined with OpenMP. */
 void SudokuMPIDynamic::task_process() {
 
+    int tmp;
     Bootstrapper probs;
+    std::stringstream message;
 
     /* task preparation */
     if (mpi_rank == 0) {
@@ -51,17 +53,18 @@ void SudokuMPIDynamic::task_process() {
 
         // set up receivers for vacancy notes
         for (r = 1; r < mpi_size; r++) {
-            MPI_Irecv(NULL, 0, MPI_INT, 
+            MPI_Irecv(&tmp, 1, MPI_INT, 
                       r, SMPI_TAGVAC, 
                       MPI_COMM_WORLD, 
-                      mpi_reqvac_master+r-1);
+                      &mpi_reqvac_master[r-1]);
         }
 
-        // assign task queue
+        // assign tasks
         r = 1;
+        int is_vac;
         while (probs.size() > 0) {
-            int is_vac = 0;
-            MPI_Test(mpi_reqvac_master+r-1,
+            is_vac = 0;
+            MPI_Test(&mpi_reqvac_master[r-1],
                      &is_vac,
                      &mpi_status);
             if (is_vac) {
@@ -69,71 +72,52 @@ void SudokuMPIDynamic::task_process() {
                 std::cout << "task queue assigning" << "...";
                 std::cout << N-probs.size()+1 << "/" << N << std::flush;
                 SMPI_DumpDeque(probs, r, 1);
-                MPI_Irecv(NULL, 0, MPI_INT, 
+                MPI_Irecv(&tmp, 1, MPI_INT, 
                           r, SMPI_TAGVAC, 
                           MPI_COMM_WORLD, 
-                          mpi_reqvac_master+r-1);
+                          &mpi_reqvac_master[r-1]);
             }
             r = r % (mpi_size-1) + 1;
         }
-
-        // free the receivers
-        for (r = 1; r < mpi_size; r++) {
-            MPI_Cancel(mpi_reqvac_master+r-1);
-            MPI_Request_free(mpi_reqvac_master+r-1);
-        }
-
         std::cout << ", exhausted" << std::endl;
 
-        // send out task-over note
+        // send out task-over message
         for (r = 1; r < mpi_size; r++) {
-            MPI_Isend(NULL, 0, MPI_INT, 
-                      r, SMPI_TAGOVER, 
-                      MPI_COMM_WORLD, 
-                      &mpi_reqover);
-            MPI_Wait(&mpi_reqover, 
+            MPI_Wait(&mpi_reqvac_master[r-1], 
                      &mpi_status);
+            SMPI_DumpDeque(probs, r, 0); // this sends no boards
         }
     }
     else {
-
-        // set up receiver for task-over note
-        MPI_Irecv(NULL, 0, MPI_INT, 
-                  0, SMPI_TAGOVER, 
-                  MPI_COMM_WORLD, 
-                  &mpi_reqover);
 
         int count = 0;
 
         while (true) {
 
-            // check if the task is over
-            int is_over = 0;
-            MPI_Test(&mpi_reqover, 
-                     &is_over, 
-                     &mpi_status);
-            if (is_over) {
-                std::stringstream message;
-                message << "RANK-" << mpi_rank << ": ";
-                message << sols.size() << " solutions found" << ", ";
-                message << "in " << count << " assignments" << std::endl;
-                std::cout << message.str();
-                break;
-            }
-
-            // report vacancy
-            MPI_Isend(NULL, 0, MPI_INT, 
+            // send out vacancy note
+            MPI_Isend(&tmp, 1, MPI_INT, 
                       0, SMPI_TAGVAC, 
                       MPI_COMM_WORLD, 
                       &mpi_reqvac_slave);
             MPI_Wait(&mpi_reqvac_slave, 
                      &mpi_status);
 
-            // get assigned and process
+            // get response from the master
             int n_assign = SMPI_LoadDeque(probs, 0);
+
+            // process
             if (n_assign > 0) {
+                // which is a valid assignment
                 single_proc_solve(probs, sols); // also clears up probs
                 count += n_assign;
+            } else {
+                // which is interpreted as a task-over message
+                message.str(std::string());
+                message << "RANK-" << mpi_rank << ": ";
+                message << sols.size() << " solutions found" << ", ";
+                message << "in " << count << " assignments" << std::endl;
+                std::cout << message.str();
+                break;
             }
         }
     }

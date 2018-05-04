@@ -37,7 +37,6 @@ protected:
     void single_proc_solve(Bootstrapper& probs, BoardDeque& sols);
 
 protected:
-    MPI_Request mpi_reqover;
     MPI_Request mpi_reqvac_slave;
     MPI_Request* mpi_reqvac_master;
 
