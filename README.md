@@ -4,9 +4,9 @@ Spring 2018 Harvard CS 205 Final Project
 Group 1: Shiyun Qiu, Xiangru Shu, Yiqi Xie, Yuyue Wang
 
 # Introduction
----
+
 # How-to-use
----
+
 ## Download source code
 
 To run our sudoku solver, first download our [source code](https://github.com/shiyunqiu/CS205_Sudoku).
@@ -26,11 +26,13 @@ For example, in our case, the command would be:
 Then go back to the instance and do `sudo apt-get update`. You should make sure you have installed the following packages:
 
 `sudo apt-get install g++`
+
 `sudo apt-get install build-essential`
 
 Then you should be able to run the program by use the following commands:
 
 `make`
+
 `run`
 
 ## Serial
