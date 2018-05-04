@@ -1,10 +1,10 @@
 /**
- @file sudoku_mpi.cpp
- @brief Implementation for the MPI version of the Sudoku Solver
+ @file sudoku_mpi_dynamic.cpp
+ @brief Implementation for the MPI dynamic scheduling version of the Sudoku solver
  @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
  @date May 1, 2018
  
- Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI.
+ Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI. The master node will be querying the slave nodes during the process, and assign new jobs to the idle nodes.
  */
 #include <iostream>
 #include <sstream>
@@ -16,13 +16,13 @@
 #include "sudoku_mpi_dynamic.hpp"
 
 
-/* Solve the problem in parallel using MPI combined with OpenMP. */
+/** Solve the problem in parallel using MPI combined with OpenMP. Use dynamic scheduling. */
 void SudokuMPIDynamic::task_process() {
 
     Bootstrapper probs;
     std::stringstream message;
 
-    /* task preparation */
+    // task preparation 
     if (mpi_rank == 0) {
 
         // bootstrapping
@@ -44,7 +44,7 @@ void SudokuMPIDynamic::task_process() {
     }
 
 
-    /* dynamicly scheduled processing */
+    // dynamic scheduling process
     if (mpi_rank == 0) {
 
         int r;
@@ -134,7 +134,10 @@ void SudokuMPIDynamic::task_process() {
     }
 }
 
-
+/** Solve the Sudoku puzzles on each node using OpenMP
+     @param probs [Deque of boards of problems]
+     @param sol [Deque of boards of solutions]
+ */
 void SudokuMPIDynamic::single_proc_solve(Bootstrapper& probs, BoardDeque& sols) {
 
     while (probs.size() > 0 && 

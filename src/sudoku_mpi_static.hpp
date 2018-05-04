@@ -1,6 +1,6 @@
 /**
  @file sudoku_mpi_static.hpp
- @brief Header file for the static scheduled MPI version of the Sudoku solver.
+ @brief Header file for the MPI static scheduling version of the Sudoku solver.
  @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
  @date May 1, 2018
  */
@@ -10,6 +10,12 @@
 
 #include "sudoku_mpi.hpp"
 
+/**
+ @class SudokuMPIStatic
+ @brief Derived class of SudokuMPI, static scheduling. Each node is assigned certain amount of work in the beginning.
+ 
+ This is an inherited class of the SudokuMPI class. It has one constructors and one public method.
+ */
 class SudokuMPIStatic: public SudokuMPI {
 
 public:

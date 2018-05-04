@@ -14,7 +14,7 @@
 #include "sudoku.hpp"
 #include "sudoku_mpi.hpp"
 
-
+// The following four parameters should be set in main.cpp
 // configurations for shuffling the first bootstrapping result
 bool SudokuMPI::SHUFFLE = false;
 unsigned SudokuMPI::SHUFFLE_SEED = std::chrono::system_clock::now().time_since_epoch().count();
@@ -23,7 +23,7 @@ int SudokuMPI::BOOTSTRAP_NUM_1 = 8;
 // number of bootstrapping needed to assign jobs to each thread
 int SudokuMPI::BOOTSTRAP_NUM_2 = 16;
 
-/* Read the content of a puzzle file, push the problem to a deque, and output the board. */
+/** Read the content of a puzzle file, push the problem to a deque, and output the board. */
 void SudokuMPI::task_begin() {
 
     if (mpi_rank == 0) {
@@ -35,7 +35,7 @@ void SudokuMPI::task_begin() {
     }
 }
 
-/* Write the solutions into a file, and print out the solution boards. */
+/** Write the solutions into a file, and print out the solution boards. */
 void SudokuMPI::task_end() {
 
     if (mpi_rank == 0) {
@@ -46,12 +46,12 @@ void SudokuMPI::task_end() {
     }
 }
 
-/* Start of the MPI timer. */
+/** Start of the MPI timer. */
 void SudokuMPI::timer_start() {
     t_start = MPI_Wtime();
 }
 
-/* End of the MPI timer and show elapsed time of execution. */
+/** End of the MPI timer and show elapsed time of execution. */
 void SudokuMPI::timer_stop() {
     t_stop = MPI_Wtime();
     if (mpi_rank == 0) {

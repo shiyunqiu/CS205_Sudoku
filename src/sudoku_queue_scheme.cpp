@@ -15,12 +15,13 @@
 #include "bootstrapper.hpp"
 #include "sudoku_queue_scheme.hpp"
 
+// The following two parameters should be set in main.cpp
 // number of threads
 int SudokuQueueScheme::THREAD_NUM = 2;
 // number of bootstrapping
 int SudokuQueueScheme::BOOTSTRAP_NUM = 8;
 
-/* Read the content of a puzzle file, push the problem to a deque, and output the board. */
+/** Read the content of a puzzle file, push the problem to a deque, and output the board. */
 void SudokuQueueScheme::task_begin() { 
 
     read(board);
@@ -28,7 +29,7 @@ void SudokuQueueScheme::task_begin() {
     board.output(std::cout);
 }
 
-/* Solve the problem in parallel using OpenMP. */
+/** Solve the problem in parallel using OpenMP. */
 void SudokuQueueScheme::task_process() {
 
     Bootstrapper problems(board);
@@ -61,7 +62,7 @@ void SudokuQueueScheme::task_process() {
     }
 }
 
-/* Write the solutions into a file, and print out the solution boards. */
+/** Write the solutions into a file, and print out the solution boards. */
 void SudokuQueueScheme::task_end() {
 
     write(solutions);
@@ -69,13 +70,13 @@ void SudokuQueueScheme::task_end() {
     solutions.output(std::cout);
 }
 
-/* Start of the OpenMP timer. */
+/** Start of the OpenMP timer. */
 void SudokuQueueScheme::timer_start() {
 
     t_start = omp_get_wtime();
 }
 
-/* End of the OpenMP timer and show elapsed time of execution. */
+/** End of the OpenMP timer and show elapsed time of execution. */
 void SudokuQueueScheme::timer_stop() {
 
     t_stop = omp_get_wtime();

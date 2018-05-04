@@ -19,7 +19,7 @@ BoardDeque::BoardDeque(const Board& b) {
     bdeque.push_back(pbnew); 
 }
 
-/* Destructor of class BoardDeque: delete the array inside the deque one by one. */
+/** Destructor of class BoardDeque: delete the array inside the deque one by one. */
 BoardDeque::~BoardDeque() {
     while (bdeque.size() > 0) {
         delete bdeque.front();
@@ -48,13 +48,13 @@ Board& BoardDeque::back() { return *(bdeque.back()); }
  */
 Board& BoardDeque::operator[] (int i) { return *(bdeque[i]); }
 
-/* Remove the first board in the deque and release memory. */
+/** Remove the first board in the deque and release memory. */
 void BoardDeque::pop_front() {
     delete bdeque.front();
     bdeque.pop_front();
 }
 
-/* Remove the last board in the deque and release memory. */
+/** Remove the last board in the deque and release memory. */
 void BoardDeque::pop_back() {
     delete bdeque.back();
     bdeque.pop_back();
@@ -124,7 +124,9 @@ void BoardDeque::output(std::ostream& out) {
     }
 }
 
-
+/** Randomly shuffle the deque to enhance load balancing
+ @param seed [random seed]
+ */
 void BoardDeque::shuffle(unsigned seed) {
     int n = bdeque.size();
     std::vector<Board*> tmpvec(n);

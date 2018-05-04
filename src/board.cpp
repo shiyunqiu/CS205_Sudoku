@@ -45,7 +45,7 @@ size(b.size) {
     std::memcpy(array, b.array, size*size*sizeof(int));
 }
 
-/* Destructor: deleting the array and free the memory. */
+/** Destructor: deleting the array and free the memory. */
 Board::~Board() { delete [] array; }
 
 /** Get the number of a cell.

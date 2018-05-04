@@ -13,24 +13,22 @@
 #include <mpi.h>
 #include "board.hpp"
 #include "board_deque.hpp"
-#include "solver.hpp"
-#include "bootstrapper.hpp"
 #include "sudoku.hpp"
 
 /**
  @class SudokuMPI
  @brief Derived class of Sudoku, solve the Sudoku puzzle in parallel with MPI.
  
- This is an inherited class of the Sudoku class. It has one constructor, one destructor, seven public methods, two public variables, four protected methods and eight protected variables.
+ This is an inherited class of the Sudoku class. It has one constructor, one destructor, four public methods, four public variables, four protected methods and eight protected variables.
  */
 class SudokuMPI: public Sudoku {
 
 public:
-    /** Constructor of classSudokuMPI: initialize MPI and set up MPI communicators, print out the number of processes
+    /** Constructor of class SudokuMPI: initialize MPI and set up MPI communicators, print out the number of processes
      @param argc [argument count]
      @param argv [argument vector]
      */
-    SudokuMPI(int argc, char** argv) {
+    SudokuMPI(int argc, char** argv): board(BSIZE) {
         MPI_Init(&argc, &argv);
         MPI_Comm_rank(MPI_COMM_WORLD, &mpi_rank);
         MPI_Comm_size(MPI_COMM_WORLD, &mpi_size);
@@ -39,43 +37,40 @@ public:
         }
     }
     
-    /* Destructor of classSudokuMPI: clean up the MPI process. */
-    ~SudokuMPI() {
+    /** Destructor of class SudokuMPI: clean up the MPI process. */
+    virtual ~SudokuMPI() {
         MPI_Finalize();
         if (mpi_rank == 0) {
             std::cout << "Sudoku MPI terminated" << std::endl;
         }
     }
     virtual void task_begin();
-    virtual void task_assign();
-    virtual void task_process();
-    virtual void task_collect();
     virtual void task_end();
     virtual void timer_start();
     virtual void timer_stop();
 
-public:
-    static unsigned SEED;
+    static bool SHUFFLE;
+    static unsigned SHUFFLE_SEED;
     static int BOOTSTRAP_NUM_1;
     static int BOOTSTRAP_NUM_2;
 
 protected:
-    void SMPI_DumpDeque(BoardDeque& bdeque, int r, int len=-1);
-    void SMPI_LoadDeque(BoardDeque& bdeque, int r);
-    void SMPI_SendBoard(Board& b, int r);
-    void SMPI_RecvBoard(Board& b, int r);
+    int SMPI_DumpDeque(BoardDeque& bdeque, int r, int len=-1, int tag=SMPI_TAGPLAIN);
+    int SMPI_LoadDeque(BoardDeque& bdeque, int r, int tag=SMPI_TAGPLAIN);
+    void SMPI_SendBoard(Board& b, int r, int tag=SMPI_TAGPLAIN);
+    void SMPI_RecvBoard(Board& b, int r, int tag=SMPI_TAGPLAIN);
 
-protected:
     int mpi_rank;
     int mpi_size;
-    MPI_Status mpi_state;
+    MPI_Status mpi_status;
 
-    // Bootstrapper probs; 
+    Board board; 
     BoardDeque sols;
-    std::deque<int> schedule;
 
     double t_start;
     double t_stop;
+
+    static const int SMPI_TAGPLAIN = 0;
 };
 
 #endif

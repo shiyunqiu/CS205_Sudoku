@@ -6,15 +6,14 @@
  */
 #include <iostream>
 #include <fstream>
-#include "board.hpp"
-#include "board_deque.hpp"
 #include "sudoku.hpp"
 
-// grid size (row length) of the Sudoku puzzle
+// the following three parameters should be changed in the main.cpp
+// default grid size (row length) of the Sudoku puzzle
 int Sudoku::BSIZE = 9;
-// input filename
+// default input filename
 std::string Sudoku::IFILE_NAME = "./problem.sdk";
-// output filename
+// default output filename
 std::string Sudoku::OFILE_NAME = "./solutions.txt";
 
 /** Read the content of the filename into a Sudoku puzzle board.

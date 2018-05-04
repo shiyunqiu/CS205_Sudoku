@@ -17,10 +17,11 @@
  @class Sudoku
  @brief Base class
  
- This class is a base class for the inherited classes Sudoku_serial, Sudoku_parallel, SudokuQueueScheme, and SudokuMPI. It has three public functions, three public parameters, and seven protected methods. The seven protected methods are left empty in the base class and will be implemented in the inherited classes as needed.
+ This class is a base class for the inherited classes Sudoku_serial, Sudoku_parallel, SudokuQueueScheme, and SudokuMPI. It has three public functions, three public parameters, and five protected methods. The five protected methods are left empty in the base class and will be implemented in the inherited classes as needed.
  */
 class Sudoku {
 public:
+    /** Solving process */
     void run() {
         task_begin();
         timer_start();
@@ -31,7 +32,6 @@ public:
     static void read(Board& b);
     static void write(BoardDeque& bq);
 
-public:
     static int BSIZE;
     static std::string IFILE_NAME;
     static std::string OFILE_NAME;

@@ -1,10 +1,10 @@
 /**
- @file sudoku_mpi.cpp
- @brief Implementation for the MPI version of the Sudoku Solver
+ @file sudoku_mpi_static.cpp
+ @brief Implementation for the  MPI static scheduling version of the Sudoku solver.
  @author Yiqi Xie, Shiyun Qiu, Yuyue Wang, Xiangru Shu
  @date May 1, 2018
  
- Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI.
+ Generate potential boards of solutions by bootstrapping, and assign jobs to each thread in each node. Solve the Sudoku puzzle simultaneously by all nodes using MPI. Work assigned to each node in the beginning.
  */
 // #include <iostream>
 #include <vector>
@@ -15,7 +15,7 @@
 #include "bootstrapper.hpp"
 #include "sudoku_mpi_static.hpp"
 
-/* Solve the problem in parallel using MPI combined with OpenMP. */
+/** Solve the problem in parallel using MPI combined with OpenMP. Tasks divided and assigned to each node in the beginning. */
 void SudokuMPIStatic::task_process() {
 
     Bootstrapper probs;

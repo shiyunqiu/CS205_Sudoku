@@ -17,11 +17,15 @@
  @class SudokuQueueScheme
  @brief Derived class of Sudoku, construct a queue of boards for parallelism
  
- This is an inherited class of the Sudoku class. It has two constructors, seven public functions, two public variables, and five protected variables.
+ This is an inherited class of the Sudoku class. It has two constructors, five protected functions, two public variables, and five protected variables.
  */
 class SudokuQueueScheme: public Sudoku {
 public:
     SudokuQueueScheme(): board(BSIZE) {};
+    /** Constructor of class SudokuQueueScheme: set up and print out OMP number of threads
+     @param argc [argument count]
+     @param argv [argument vector]
+     */
     SudokuQueueScheme(int argc, char** argv): board(BSIZE) {
         omp_set_dynamic(0);
         omp_set_num_threads(THREAD_NUM);
@@ -35,7 +39,7 @@ public:
             }
         }
     }
-public:
+
     static int THREAD_NUM;
     static int BOOTSTRAP_NUM;
 protected:

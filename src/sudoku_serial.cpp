@@ -14,33 +14,33 @@
 #include "solver.hpp"
 #include "sudoku_serial.hpp"
 
-/* Read the content of a puzzle file, and output the board. */
+/** Read the content of a puzzle file, and output the board. */
 void SudokuSerial::task_begin() { 
     read(board); 
     std::cout << "Problem Board: " << std::endl;
     board.output(std::cout);
 }
 
-/* Solve the Sudoku puzzle and save the solution in a deque of boards. */
+/** Solve the Sudoku puzzle and save the solution in a deque of boards. */
 void SudokuSerial::task_process() {
     Solver solver(board);
     solver.solve();
     solver.dump(solutions);
 }
 
-/* Write the solutions to a file and print out the solution boards. */
+/** Write the solutions to a file and print out the solution boards. */
 void SudokuSerial::task_end() {
     write(solutions); 
     std::cout << "Solution Board(s): " << std::endl;
     solutions.output(std::cout);
 }
 
-/* Start of the timer. */
+/** Start of the timer. */
 void SudokuSerial::timer_start() {
     t_start = clock();
 }
 
-/* End of the timer and show elapsed time of execution. */
+/** End of the timer and show elapsed time of execution. */
 void SudokuSerial::timer_stop() {
     t_stop = clock();
     std::cout << "Elapsed in ";

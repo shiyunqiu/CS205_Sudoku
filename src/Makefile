@@ -1,8 +1,10 @@
 # cxx=g++
+# please uncomment the line below if testing OpenMP
 # cxx=g++ -fopenmp
 # cxx=g++-7
 # cxx=g++-7 -fopenmp
 # cxx=mpic++
+# please comment the line below if testing OpenMP
 cxx=mpic++ -fopenmp
 cflags+=-std=c++11
 
@@ -14,9 +16,11 @@ objs=\
 	solver.cpp \
 	bootstrapper.cpp \
 	sudoku.cpp \
-	sudoku_serial.cpp \
 	sudoku_mpi.cpp \
-	# sudoku_queue_scheme.cpp \
+	sudoku_mpi_static.cpp \
+	sudoku_mpi_dynamic.cpp \
+	sudoku_serial.cpp \
+	sudoku_queue_scheme.cpp \
 
 src=$(patsubst %.cpp,$(objs))
 

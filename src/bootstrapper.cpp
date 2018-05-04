@@ -8,7 +8,7 @@
  */
 #include "bootstrapper.hpp"
 
-/* Propagate possible boards of solutions and divide one Sudoku problem into several simpler subproblems. */
+/** Propagate possible boards of solutions and divide one Sudoku problem into several simpler subproblems. */
 void Bootstrapper::bootstrap() {
 
     // if there is no start, return

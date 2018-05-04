@@ -17,7 +17,7 @@
  @class SudokuSerial
  @brief Derived class of Sudoku, serial version of the Sudoku Solver
  
- This is an inherited class of the Sudoku class. It has two constructors, five public functions, and three protected variables.
+ This is an inherited class of the Sudoku class. It has two constructors, five protected functions, and four protected variables.
  */
 class SudokuSerial: public Sudoku {
 public:
@@ -29,7 +29,7 @@ protected:
     virtual void task_end();
     virtual void timer_start();
     virtual void timer_stop();
-protected:
+
     Board board;
     BoardDeque solutions;
     clock_t t_start, t_stop;

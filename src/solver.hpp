@@ -8,8 +8,6 @@
 #ifndef SOLVER_H
 #define SOLVER_H
 
-#include <iostream>
-#include "board.hpp"
 #include "board_deque.hpp"
 
 /**
@@ -21,14 +19,14 @@
 class Solver: public BoardDeque {
 
 public:
-    /* Default constructor */
+    /** Default constructor */
     Solver(): BoardDeque() {}
     /** Constructor of class Solver: construct by calling the BoardDeque class's constructor
      @param b [a board]
      */
     Solver(const Board& b): BoardDeque(b) {}
     void solve(Board& b, int r=0, int c=0);
-    /* Solve all boards one by one. */
+    /** Solve all boards one by one. */
     void solve() { 
         if (size() > 0) {
             solve(front()); 
