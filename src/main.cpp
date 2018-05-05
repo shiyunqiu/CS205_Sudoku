@@ -23,7 +23,7 @@ int main(int argc, char** argv) {
     Sudoku::OFILE_NAME = "./solutions.txt";
 
     // Uncomment the line below for serial solver
-    // SudokuSerial sudoku(argc, argv); 
+    SudokuSerial sudoku(argc, argv); 
 
     // Uncomment three lines below for OpenMP version
     // SudokuQueueScheme::THREAD_NUM = 2;
@@ -31,16 +31,16 @@ int main(int argc, char** argv) {
     // SudokuQueueScheme sudoku(argc, argv);
 
     // Uncomment four lines below for MPI+OpenMP version
-    SudokuMPI::SHUFFLE = false; // whether to shuffle the task queue before assigning to each node 
-    SudokuMPI::SHUFFLE_SEED = 9001;
-    SudokuMPI::BOOTSTRAP_NUM_1 = 512;
-    SudokuMPI::BOOTSTRAP_NUM_2 = 2048;
+    // SudokuMPI::SHUFFLE = false; // whether to shuffle the task queue before assigning to each node 
+    // SudokuMPI::SHUFFLE_SEED = 9001;
+    // SudokuMPI::BOOTSTRAP_NUM_1 = 512;
+    // SudokuMPI::BOOTSTRAP_NUM_2 = 2048;
 
     // MPI Static scheduling
     // SudokuMPIStatic sudoku(argc, argv);
 
     // MPI Dynamic scheduling
-    SudokuMPIDynamic sudoku(argc, argv);
+    // SudokuMPIDynamic sudoku(argc, argv);
 
     sudoku.run();
 
