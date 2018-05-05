@@ -1,10 +1,3 @@
-# cxx=g++
-# please uncomment the line below if testing OpenMP
-# cxx=g++ -fopenmp
-# cxx=g++-7
-# cxx=g++-7 -fopenmp
-# cxx=mpic++
-# please comment the line below if testing OpenMP
 cxx=mpic++ -fopenmp
 cflags+=-std=c++11
 
