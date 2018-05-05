@@ -10,55 +10,62 @@ Sudoku is a combinatorial number placement puzzle. The objective of this game is
 
 ## Download Source Code
 
-To run our sudoku solver, first download our [source code](https://github.com/shiyunqiu/CS205_Sudoku).
+To run our sudoku solver, first download our [source code and test cases](https://github.com/shiyunqiu/CS205_Sudoku).
 
 ## Set Up
 
-As our program requires OpenMP and MPI, we recommend using AWS to run our code. To set up OpenMP and MPI on AWS, we followed the guides provided by CS205: [OpenMP](https://canvas.harvard.edu/courses/37285/files/5490479?module_item_id=363501) and [MPI](https://canvas.harvard.edu/courses/37285/files/5490480?module_item_id=363500).
+We adapt our code to AWS t2.2xlarge instances with Ubuntu 16.04.4 LTS. To set up an AWS cluster with OpenMP and MPI configured, we followed the guides provided by CS205: [OpenMP](https://canvas.harvard.edu/courses/37285/files/5490479?module_item_id=363501) and [MPI](https://canvas.harvard.edu/courses/37285/files/5490480?module_item_id=363500). After the setup, you should have:
 
-After connecting to the AWS instance, copy the source code and test cases from local to the AWS instance using the following command:
+ - enabled passwordless ssh between any pair of cluster nodes with username `mpiuser`
+ - created the directory `/home/mpiuser/cloud` on the master node and made it shared by all the others
+ - configured the MPI environment using ports 10000-10100
+ - installed `mpich`
 
-```
-scp -i [key] [source code] [AWS Public IP]
-```
-
-For example, in our case, the command would be: 
-
-```
-scp -i ~/.ssh/cs205­key.pem code/* ubuntu@ec2­18­218­17­64.us­east­2.compute.amazonaws.com:
-```
-
-Then go back to the instance and do `sudo apt-get update`. You should make sure you have installed the following packages:
+In addition, as we use makefile to compile our code, you need to install `build-essential`. To nail this down, run the following command line on the master node:
 
 ```
-sudo apt-get install g++
+$ sudo apt-get install build-essential
 ```
 
-```
-sudo apt-get install build-essential
-```
 
 ## Run
  
-We prepared a `Makefile` to compile the code, then you should be able to run the program by use the following commands:
+Upload our source code and test cases to the master node. You may use the following command lines:
 
 ```
-make
+$ scp -i [ssh key] <parent directory>/src/* mpiuser@<master node public IP>:~/cloud/src
+$ scp -i [ssh key] <parent directory>/test_cases/* mpiuser@<master node public IP>:~/cloud/test_cases
 ```
 
-```
-./run
-```
-
-To run MPI version, after command `make`, copy file `run` to directory `cloud`, then go to `cloud` and use the following command to run:
+Connect to your master node on AWS, log in as `mpiuser` and change directory to `cloud/src`. You can build the program with command line:
 
 ```
- mpirun -np [number of nodes] -hosts master,node1... ./run
+$ make
 ```
 
-For example, to use 4 nodes, the command is:
+This creates an executable named `run`. By default it solves a relatively simple test case with serial algorithm. You may configure the program to use parallel algorithms in `main.cpp`, where detailed instructions can be found.
+
+To run the serial solver, simply type
+
 ```
- mpirun -np 4 -hosts master,node1,node2,node3,node4 ./run
+$ ./run
+```
+
+In your terminal. The OpenMP version can be executed in the same way. However, if you want to tune the number of threads, you can specify it as an environment variable:
+
+```
+$ export OMP_NUM_THREADS=<the number of threads you want>
+```
+
+To execute the MPI versions, you have to use the `mpirun` keyword:
+
+```
+$ mpirun -np [number of processes] -hosts [list of hostnames] ./run
+```
+
+For example, to use 4 nodes with 1 process per node, the command line is like:
+```
+$ mpirun -np 4 -hosts master,node1,node2,node3,node4 ./run
 ```
 
 ## Test Cases
