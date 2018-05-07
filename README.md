@@ -45,13 +45,13 @@ Connect to your master node on AWS, log in as `mpiuser` and change directory to 
 $ make
 ```
 
-This creates an executable named `run`. To execute it, the command line with full parameter list is:
+This creates an executable named `run`. To execute the serial version of our Sudoku solver, the command line with full parameter list is:
 
 ```
 $ ./run [size] [input] [output] [mode] [number of 1st bootstrap] [number of 2nd bootstrap] [shuffle] [seed]
 ```
 
-Below is a detailed instruction on the parameters:
+Notation:
  - `size`: (int) the size of the sudoku board, defaults 16
  - `input`: (string) the path to the problem input, defaults `../test_cases/test16_1min.sdk`
  - `output`: (string) the path to the solution output, defaults `./solutions.txt`
@@ -60,9 +60,9 @@ Below is a detailed instruction on the parameters:
     - 1: parallel mode using OpenMP only
     - 2: parallel mode using MPI+OpenMP with static scheduling policy at MPI level
     - 3 (or greater): parallel mode using MPI+OpenMP with dynamic scheduling policy at MPI level
- - `number of 1st bootstrap`: (int) the number of first bootstrap for parallelism, is ignored when `mode <= 0`, defaults 512
- - `number of 2nd bootstrap`: (int) the number of second bootstrap for parallelism, is ignored when `mode <= 1`, defaults 512
- - `shuffle`: (bool) whether to shuffle the bootstrap result at MPI level, is ignored when `mode <= 1`, defaults 0
+ - `number of 1st bootstrap`: (int) the first bootstrapping number for the parallel version, is ignored when `mode <= 0`, defaults 512
+ - `number of 2nd bootstrap`: (int) the second bootstrapping number for the parallel version, is ignored when `mode <= 1`, defaults 512
+ - `shuffle`: (bool) whether to shuffle the bootstrapping result at MPI level, is ignored when `mode <= 1`, defaults 0
  - `seed`: (int) the seed to randomize the above shuffling process, is ignored when `mode <= 1`, defaults 0
 
 In addition, if you want to tune the number of threads for the OpenMP version, you can specify it as an environment variable:
@@ -74,7 +74,7 @@ $ export OMP_NUM_THREADS=<the number of threads you want>
 and in order to enable MPI functionalities, you have to use the `mpirun` keyword when executing `run`:
 
 ```
-$ mpirun -np [number of processes] -hosts [list of hostnames] ./run [parameters]
+$ mpirun -np [number of processes] -hosts [list of hostnames] ./run [list of parameters]
 ```
 
 ## Test Cases
