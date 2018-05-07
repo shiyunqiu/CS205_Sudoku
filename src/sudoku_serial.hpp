@@ -21,7 +21,9 @@
  */
 class SudokuSerial: public Sudoku {
 public:
-    SudokuSerial(): board(Board(BSIZE)) {}
+    SudokuSerial(): board(Board(BSIZE)) {
+        std::cout << "Sudoku Serial started" << std::endl << std::endl;
+    }
     SudokuSerial(int argc, char** argv): SudokuSerial() {}
 protected:
     virtual void task_begin();

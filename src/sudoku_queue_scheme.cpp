@@ -15,9 +15,7 @@
 #include "bootstrapper.hpp"
 #include "sudoku_queue_scheme.hpp"
 
-// The following two parameters should be set in main.cpp
-// number of threads
-int SudokuQueueScheme::THREAD_NUM = 2;
+// The following parameters should be set in main.cpp
 // number of bootstrapping
 int SudokuQueueScheme::BOOTSTRAP_NUM = 8;
 

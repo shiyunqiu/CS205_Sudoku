@@ -15,34 +15,37 @@
 
 int main(int argc, char** argv) {
 
-    // Please check input file path and output file path before running
+    Sudoku::BSIZE      = (argc > 1) ? atoi(argv[1]) : 16;
+    Sudoku::IFILE_NAME = (argc > 2) ? argv[2] : "../test_cases/test16_1min.sdk";
+    Sudoku::OFILE_NAME = (argc > 3) ? argv[3] : "./solutions.txt";
 
-    // Change problem size, input and output path
-    Sudoku::BSIZE = 16;
-    Sudoku::IFILE_NAME = "../test_cases/test16_5min.sdk";
-    Sudoku::OFILE_NAME = "./solutions.txt";
+    int mode = (argc > 4) ? atoi(argv[4]) : 0;
 
-    // Uncomment the line below for serial solver
-    SudokuSerial sudoku(argc, argv); 
-
-    // Uncomment three lines below for OpenMP version
-    // SudokuQueueScheme::THREAD_NUM = 2;
-    // SudokuQueueScheme::BOOTSTRAP_NUM = 512;
-    // SudokuQueueScheme sudoku(argc, argv);
-
-    // Uncomment four lines below for MPI+OpenMP version
-    // SudokuMPI::SHUFFLE = false; // whether to shuffle the task queue before assigning to each node 
-    // SudokuMPI::SHUFFLE_SEED = 9001;
-    // SudokuMPI::BOOTSTRAP_NUM_1 = 512;
-    // SudokuMPI::BOOTSTRAP_NUM_2 = 2048;
-
-    // MPI Static scheduling
-    // SudokuMPIStatic sudoku(argc, argv);
-
-    // MPI Dynamic scheduling
-    // SudokuMPIDynamic sudoku(argc, argv);
-
-    sudoku.run();
+    if (mode <= 0) {
+        // Serial Mode
+        SudokuSerial sudoku(argc, argv);
+        sudoku.run();
+    } else if (mode == 1) {
+        // OMP Mode
+        SudokuQueueScheme::BOOTSTRAP_NUM = (argc > 5) ? atoi(argv[5]) : 512;
+        SudokuQueueScheme sudoku(argc, argv);
+        sudoku.run();
+    } else if (mode >= 2) {
+        // MPI Mode
+        SudokuMPI::BOOTSTRAP_NUM_1 = (argc > 5) ? atoi(argv[5]) : 512;
+        SudokuMPI::BOOTSTRAP_NUM_2 = (argc > 6) ? atoi(argv[6]) : 512;
+        SudokuMPI::SHUFFLE         = (argc > 7) ? atoi(argv[7]) : 0; // whether to shuffle the task queue before assigning to each node 
+        SudokuMPI::SHUFFLE_SEED    = (argc > 8) ? atoi(argv[8]) : 0;
+        if (mode == 2) {
+            // MPI Static Scheduling
+            SudokuMPIStatic sudoku(argc, argv);
+            sudoku.run();
+        } else {
+            // MPI Dynamic Scheduling
+            SudokuMPIDynamic sudoku(argc, argv);
+            sudoku.run();
+        }
+    }
 
     return 0;
 }

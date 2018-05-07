@@ -27,20 +27,16 @@ public:
      @param argv [argument vector]
      */
     SudokuQueueScheme(int argc, char** argv): board(BSIZE) {
-        omp_set_dynamic(0);
-        omp_set_num_threads(THREAD_NUM);
         #pragma omp parallel
         {
             #pragma omp single
             {
                 n_thread = omp_get_num_threads(); 
-                std::cout << "OMP Number of Threads: ";
-                std::cout << n_thread << std::endl << std::endl;
+                std::cout << "Sudoku OMP started with " << n_thread << " threads"  << std::endl << std::endl;
             }
         }
     }
 
-    static int THREAD_NUM;
     static int BOOTSTRAP_NUM;
 protected:
     virtual void task_begin();
