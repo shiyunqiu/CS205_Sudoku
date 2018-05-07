@@ -78,7 +78,7 @@ All the [test cases](https://github.com/shiyunqiu/CS205_Sudoku/tree/master/test_
 
 `test16_5min.sdk`: a 16 * 16 sudoku problem, took 5 min to solve in serial version 
 
-`test16_15min.sdk`: a 25 * 25 sudoku problem, took 15 min to solve in serial version
+`test16_15min.sdk`: a 16 * 16 sudoku problem, took 15 min to solve in serial version
 
 `test25_5min.sdk`: a 25 * 25 sudoku problem, took 5 min to solve in serial version 
 
