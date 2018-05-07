@@ -53,7 +53,7 @@ To run the serial solver, simply type
 $ ./run
 ```
 
-In your terminal. The OpenMP version can be executed in the same way. However, if you want to tune the number of threads, you can specify it as an environment variable:
+In your terminal. The OpenMP version can be executed in the same way. However, if you want to tune the number of threads, you can change the `THREAD_NUM` in the main.cpp or specify it as an environment variable:
 
 ```
 $ export OMP_NUM_THREADS=<the number of threads you want>
